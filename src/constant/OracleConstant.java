@@ -9,4 +9,6 @@ public final class OracleConstant {
 	public static final String USERNAME = "MAP";
 	public static final String PASSWORD = "MAP";
 	
+	public static final String test ="32432143214";
+	
 }
