@@ -37,7 +37,7 @@ public class RegionDaoImpl implements RegionDao {
 	}
 
 	@Override
-	public Region getRegion(int regionId) throws SQLException {
+	public Region getRegion(String regionId) throws SQLException {
 		return null;
 	}
 
@@ -56,7 +56,7 @@ public class RegionDaoImpl implements RegionDao {
 	}
 
 	@Override
-	public int deleteRegion(int regionId) throws SQLException {
+	public int deleteRegion(String regionId) throws SQLException {
 		return 0;
 	}
 
