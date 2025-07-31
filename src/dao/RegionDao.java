@@ -17,4 +17,5 @@ public interface RegionDao {
 
 	public abstract int deleteRegion(int regionId) throws SQLException;
 
+
 }
