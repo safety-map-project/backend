@@ -41,4 +41,6 @@ public class RegionServiceImpl implements RegionService {
 		return regionDao.deleteRegion(regionId);
 	}
 
+	
+
 }
