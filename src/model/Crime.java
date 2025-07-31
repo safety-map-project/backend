@@ -11,10 +11,20 @@ public class Crime implements Serializable {
 	private int regionId; // 지역아이디
 	private String crimeType; // 범죄타입
 	private int crimeCount; // 범죄건수
+	private String region;
 
 	public Crime() {
 	}
 
+	public Crime(int crimeId, int crimeYear, int regionId, String crimeType, int crimeCount, String region) {
+		this.crimeId = crimeId;
+		this.crimeYear = crimeYear;
+		this.regionId = regionId;
+		this.crimeType = crimeType;
+		this.crimeCount = crimeCount;
+		this.region = region;
+	}
+	
 	public Crime(int crimeId, int crimeYear, int regionId, String crimeType, int crimeCount) {
 		this.crimeId = crimeId;
 		this.crimeYear = crimeYear;
@@ -63,10 +73,18 @@ public class Crime implements Serializable {
 		this.crimeCount = crimeCount;
 	}
 
+	public String getRegion() {
+		return region;
+	}
+
+	public void setRegion(String region) {
+		this.region = region;
+	}
+
 	@Override
 	public String toString() {
 		return "Crime [crimeId=" + crimeId + ", crimeYear=" + crimeYear + ", regionId=" + regionId + ", crimeType="
-				+ crimeType + ", crimeCount=" + crimeCount + "]";
+				+ crimeType + ", crimeCount=" + crimeCount + ", region=" + region + "]";
 	}
 
 }

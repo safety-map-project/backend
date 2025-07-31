@@ -22,7 +22,7 @@ public class RegionServiceImpl implements RegionService {
 	}
 
 	@Override
-	public Region getRegion(int regionId) throws SQLException {
+	public Region getRegion(String regionId) throws SQLException {
 		return regionDao.getRegion(regionId);
 	}
 
@@ -37,8 +37,10 @@ public class RegionServiceImpl implements RegionService {
 	}
 
 	@Override
-	public int deleteRegion(int regionId) throws SQLException {
+	public int deleteRegion(String regionId) throws SQLException {
 		return regionDao.deleteRegion(regionId);
 	}
+
+	
 
 }
