@@ -15,6 +15,10 @@ public class Police implements Serializable {
 	public Police() {
 	}
 
+	public Police(String location) {
+		this.location=location;
+	}
+
 	public Police(int policeId, String location, int regionId, int lat, int log) {
 		this.policeId = policeId;
 		this.location = location;

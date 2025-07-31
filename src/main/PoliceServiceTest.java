@@ -1,6 +1,7 @@
 package main;
 
 import java.io.IOException;
+import java.sql.SQLException;
 
 import util.APIUtil.PoliceAPI;
 
@@ -16,6 +17,9 @@ public class PoliceServiceTest {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		} catch (InterruptedException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} catch (SQLException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
