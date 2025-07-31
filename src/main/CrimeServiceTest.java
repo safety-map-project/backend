@@ -22,7 +22,7 @@ public class CrimeServiceTest {
 		
 		try {
 			
-			Map<Integer, String> regionMap = new HashMap();
+			Map<String, String> regionMap = new HashMap();
 			List<Region> regionList = regionService.listRegion();
 			for(Region region : regionList) {
 				regionMap.put(region.getRegionId(), region.getGu());

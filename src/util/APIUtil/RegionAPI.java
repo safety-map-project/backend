@@ -42,7 +42,7 @@ public class RegionAPI {
 //				그래서 객체로 접근하는 것이다.
 				JsonObject properties = obj.get("properties").getAsJsonObject();
 				
-				int regionId = properties.get("SIG_CD").getAsInt();
+				String regionId = properties.get("SIG_CD").getAsString();
 				String sig_kor_nm = properties.get("SIG_KOR_NM").getAsString();
 				
 				String gu = sig_kor_nm;
