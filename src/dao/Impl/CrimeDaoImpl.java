@@ -9,12 +9,14 @@ import java.util.List;
 import dao.CrimeDao;
 import model.Crime;
 import util.ConnectionUtil;
+import util.APIUtil.CrimeAPI;
 
 public class CrimeDaoImpl implements CrimeDao {
 	
 	private Connection conn;
 	private PreparedStatement pstmt;
 	ResultSet rs;
+	private List<Crime> crimeList = CrimeAPI.getCrimeList(CrimeAPI.getCrimeAPI());
 	
 	public CrimeDaoImpl() {
 		conn = ConnectionUtil.getConnectionUtil().getConnection();
@@ -32,7 +34,18 @@ public class CrimeDaoImpl implements CrimeDao {
 
 	@Override
 	public int insertCrime(Crime crime) throws SQLException {
-		return 0;
+		
+		// crimeId, crimeYear, regionId, crimeType, crimeCount, region
+		String sql = " insert into crime values(seq_crime.nextval, ?, ?, ?, ?, ?) ";
+		pstmt = conn.prepareStatement(sql);
+
+		pstmt.setInt(1, crime.getCrimeYear());
+		pstmt.setInt(2, crime.getRegionId());
+		pstmt.setString(3, crime.getCrimeType());
+		pstmt.setInt(4, crime.getCrimeCount());
+		pstmt.setString(5, crime.getRegion());			
+		
+		return pstmt.executeUpdate();
 	}
 
 	@Override
