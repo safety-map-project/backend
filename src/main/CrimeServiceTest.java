@@ -1,7 +1,9 @@
 package main;
 
 import java.sql.SQLException;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import model.Crime;
 import model.Region;
@@ -20,12 +22,20 @@ public class CrimeServiceTest {
 		
 		try {
 			
-			List<Crime> crimeList = CrimeAPI.getCrimeList(CrimeAPI.getCrimeAPI());
-			for(Crime crime : crimeList) {
-				crimeService.insertCrime(
-						new Crime(0, crime.getCrimeYear(), 0, crime.getCrimeType(), crime.getCrimeCount(), crime.getRegion())
-				);
+			Map<Integer, String> regionMap = new HashMap();
+			List<Region> regionList = regionService.listRegion();
+			for(Region region : regionList) {
+				regionMap.put(region.getRegionId(), region.getGu());
 			}
+			
+			System.out.println(regionMap);
+			
+//			List<Crime> crimeList = CrimeAPI.getCrimeList(CrimeAPI.getCrimeAPI());
+//			for(Crime crime : crimeList) {
+//				crimeService.insertCrime(
+//						new Crime(0, crime.getCrimeYear(), 0, crime.getCrimeType(), crime.getCrimeCount(), crime.getRegion())
+//				);
+//			}
 			
 			
 		} catch (SQLException sqle) {

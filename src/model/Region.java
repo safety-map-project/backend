@@ -6,34 +6,43 @@ public class Region implements Serializable {
 
 	private static final long serialVersionUID = 562655665565263263L;
 
-	private String regionId; // 지역아이디
+	private int regionId; // 지역아이디
+	private String si; // 광역시
 	private String gu; // 구
-//	private int startIat; // 시작위도
-//	private int startLog; // 시작경도
-//	private int endLat; // 끝위도
-//	private int endLog; // 끝경도
+	private int startIat; // 시작위도
+	private int startLog; // 시작경도
+	private int endLat; // 끝위도
+	private int endLog; // 끝경도
 
 	public Region() {
 	}
 
-	public Region(String regionId, String gu) {
+	public Region(int regionId, String si, String gu, int startIat, int startLog, int endLat, int endLog) {
 		this.regionId = regionId;
+		this.si = si;
 		this.gu = gu;
-//		this.startIat = startIat;
-//		this.startLog = startLog;
-//		this.endLat = endLat;
-//		this.endLog = endLog;
+		this.startIat = startIat;
+		this.startLog = startLog;
+		this.endLat = endLat;
+		this.endLog = endLog;
 	}
 
-	public String getRegionId() {
+	public int getRegionId() {
 		return regionId;
 	}
 
-	public void setRegionId(String regionId) {
+	public void setRegionId(int regionId) {
 		this.regionId = regionId;
 	}
 
-	
+	public String getSi() {
+		return si;
+	}
+
+	public void setSi(String si) {
+		this.si = si;
+	}
+
 	public String getGu() {
 		return gu;
 	}
@@ -42,41 +51,42 @@ public class Region implements Serializable {
 		this.gu = gu;
 	}
 
-//	public int getStartIat() {
-//		return startIat;
-//	}
-//
-//	public void setStartIat(int startIat) {
-//		this.startIat = startIat;
-//	}
-//
-//	public int getStartLog() {
-//		return startLog;
-//	}
-//
-//	public void setStartLog(int startLog) {
-//		this.startLog = startLog;
-//	}
-//
-//	public int getEndLat() {
-//		return endLat;
-//	}
-//
-//	public void setEndLat(int endLat) {
-//		this.endLat = endLat;
-//	}
-//
-//	public int getEndLog() {
-//		return endLog;
-//	}
-//
-//	public void setEndLog(int endLog) {
-//		this.endLog = endLog;
-//	}
+	public int getStartIat() {
+		return startIat;
+	}
+
+	public void setStartIat(int startIat) {
+		this.startIat = startIat;
+	}
+
+	public int getStartLog() {
+		return startLog;
+	}
+
+	public void setStartLog(int startLog) {
+		this.startLog = startLog;
+	}
+
+	public int getEndLat() {
+		return endLat;
+	}
+
+	public void setEndLat(int endLat) {
+		this.endLat = endLat;
+	}
+
+	public int getEndLog() {
+		return endLog;
+	}
+
+	public void setEndLog(int endLog) {
+		this.endLog = endLog;
+	}
 
 	@Override
 	public String toString() {
-		return "Region [regionId=" + regionId +  "gu=" + gu + "]";
+		return "Region [regionId=" + regionId + ", si=" + si + ", gu=" + gu + ", startIat=" + startIat + ", startLog="
+				+ startLog + ", endLat=" + endLat + ", endLog=" + endLog + "]";
 	}
 
 }
