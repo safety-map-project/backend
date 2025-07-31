@@ -50,6 +50,7 @@ public class PoliceAPI {
 		// 받아온 데이터
 		HttpResponse response = client.send(request, BodyHandlers.ofString());
 		String jsonStr = (String)response.body();
+		String jsonSt2r = (String)response.body();
 
 		return jsonStr;
 
