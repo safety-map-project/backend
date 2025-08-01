@@ -13,8 +13,8 @@ import util.ConnectionUtil;
 public class PoliceDaoImpl implements PoliceDao {
 
 	private Connection conn;
-	private PreparedStatement pstmt;
-	ResultSet rs;
+	private PreparedStatement st;
+	ResultSet set;
 
 	public PoliceDaoImpl() {
 		conn = ConnectionUtil.getConnectionUtil().getConnection();
@@ -27,11 +27,36 @@ public class PoliceDaoImpl implements PoliceDao {
 
 	@Override
 	public Police getPolice(int policeId) throws SQLException {
-		return null;
+		String sql = " SELECT POLICEID, LOCATION, REGIONID, LAT, LOG " +
+					" FROM POLICE " +
+					" WHERE POLICEID = ? ";
+		
+		st = conn.prepareStatement(sql);
+		st.setInt(1, policeId);
+		set = st.executeQuery();
+		
+		Police police = new Police();
+		if (set != null) {
+			while (set.next()) {
+				police.setPoliceId(set.getInt("policeId"));
+				police.setLocation(set.getString("location"));
+				police.setRegionId(set.getString("regionId"));
+				police.setLat(set.getInt("lat"));
+				police.setLog(set.getInt("log"));
+			}
+		}
+		
+		return police;
 	}
 
 	@Override
 	public int insertPolice(Police police) throws SQLException {
+		String sql = " INSERT INTO POLICE " +
+					" VALUES(SEQ_POLICE.NEXTVAL, ?, ?, ?, ?) ";
+		
+		pstmt = conn.prepareStatement(sql);
+		pstmt.setString(0, sql);
+//		rs = pstmt.executeQuery();
 		return 0;
 	}
 
