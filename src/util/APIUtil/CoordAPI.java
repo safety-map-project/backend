@@ -3,7 +3,6 @@ package util.APIUtil;
 import java.io.FileReader;
 import java.io.Reader;
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -22,24 +21,42 @@ public class CoordAPI {
 	
 	public static List<Coord> makeCoordList() {
 		
+		List<Coord> coordList = new ArrayList<Coord>();
+		
 		try(Reader reader = new FileReader("C:\\Users\\Administrator\\git\\backend\\src\\util\\APIUtil\\sigu.json")) {
 			
 			JsonObject obj = JsonParser.parseReader(reader).getAsJsonObject();
+//			System.out.println(obj);
 			JsonArray features = obj.get("features").getAsJsonArray();
 			
-			List<Coord> coordList = new ArrayList<Coord>();
+			
 			for(JsonElement ele : features) { 
 				
-//				SIG_CD 
+				System.out.println(ele);
+				
+				String sig_kor_nm 
+				= ele.getAsJsonObject()
+				.get("properties")
+				.getAsJsonObject()
+				.get("SIG_KOR_NM")
+				.getAsString();
+				
+				
+				if(!sig_kor_nm.trim().contains("구")) {
+					continue;
+				}
+				
+//				지역코드
 				String regionId 
 				= ele.getAsJsonObject()
 				.get("properties")
 				.getAsJsonObject()
 				.get("SIG_CD")
 				.getAsString();
-//				System.out.println(regionId);
+//				System.out.println("regionId 출력: " + regionId);
 				
-//				coordinates(polygon 좌표) 배열
+				
+//				위도경도 쌍 배열을 요소로 가진 배열
 				JsonArray coordinates 
 					= ele.getAsJsonObject()
 					.get("geometry")
@@ -48,29 +65,19 @@ public class CoordAPI {
 					.getAsJsonArray().get(0)
 					.getAsJsonArray();
 				
-				int size = coordinates.size();
-				for(int i=0; i<size; i++) {
-					double lat 
-					= coordinates.get(i)
-					.getAsJsonArray()
-					.get(1).getAsDouble();
-					
-					double log
-					= coordinates.get(i)
-					.getAsJsonArray()
-					.get(0).getAsDouble();
-					
+				for(JsonElement coord : coordinates) {
+					double lat = coord.getAsJsonArray().get(1).getAsDouble(); // 위도
+					double log = coord.getAsJsonArray().get(0).getAsDouble(); // 경도
 					coordList.add(new Coord(0, lat, log, regionId));
 				}
-				
-			} 
 			
-			return coordList;
+				return coordList;
+			}
 			
-		} catch(Exception e) {
+			
+		}catch(Exception e) {
 			e.printStackTrace();
 		}
-		
 		return null;
 		
 	} // makeCoordList
