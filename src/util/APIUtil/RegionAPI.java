@@ -60,17 +60,19 @@ public class RegionAPI {
 				} 
 			}
 			
-		}catch (FileNotFoundException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		} catch (IOException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
-		return regionList;
+			} catch (FileNotFoundException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			} catch (IOException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+			return regionList;
 			
-			
-			
+	} // makeRegionList
+	
+	public static void main(String[] args) {
+		System.out.println(makeRegionList());
 	}
 	
 } // class
