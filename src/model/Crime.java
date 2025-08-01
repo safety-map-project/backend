@@ -11,12 +11,12 @@ public class Crime implements Serializable {
 	private int regionId; // 지역아이디
 	private String crimeType; // 범죄타입
 	private int crimeCount; // 범죄건수
-	private String region;
+	private String region; // 지역이름
 
 	public Crime() {
 	}
 
-	public Crime(int crimeId, int crimeYear, int regionId, String crimeType, int crimeCount, String region) {
+	public Crime(int crimeId, int crimeYear, String crimeType, int crimeCount, int regionId, String region) {
 		this.crimeId = crimeId;
 		this.crimeYear = crimeYear;
 		this.regionId = regionId;

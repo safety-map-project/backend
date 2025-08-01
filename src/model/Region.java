@@ -7,7 +7,7 @@ public class Region implements Serializable {
 	private static final long serialVersionUID = 562655665565263263L;
 
 	private String regionId; // 지역아이디
-//	private String si; // 광역시
+	private String si; // 광역시
 	private String gu; // 구
 //	private int startIat; // 시작위도
 //	private int startLog; // 시작경도
@@ -21,6 +21,11 @@ public class Region implements Serializable {
 		this.regionId = regionId;
 		this.gu = gu;
 	}
+	public Region(String regionId, String gu, String si) {
+		this.regionId = regionId;
+		this.gu = gu;
+		this.si = si;
+	}
 
 	public String getRegionId() {
 		return regionId;
@@ -30,13 +35,13 @@ public class Region implements Serializable {
 		this.regionId = string;
 	}
 
-//	public String getSi() {
-//		return si;
-//	}
-//
-//	public void setSi(String si) {
-//		this.si = si;
-//	}
+	public String getSi() {
+		return si;
+	}
+
+	public void setSi(String si) {
+		this.si = si;
+	}
 
 	public String getGu() {
 		return gu;
@@ -80,7 +85,7 @@ public class Region implements Serializable {
 
 	@Override
 	public String toString() {
-		return "Region [regionId=" + regionId + ", gu=" + gu + "]";
+		return "Region [regionId=" + regionId + "si" + si + ", gu=" + gu + "]";
 	}
 
 }
