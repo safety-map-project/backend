@@ -68,134 +68,85 @@ public class CrimeServiceTest {
 	
 	private static void addRegionIdToCrime(CrimeService crimeService, Map.Entry<String, String> entry) throws Exception {
 		
+		Map<String, String> regionMap = Map.ofEntries(
+			Map.entry("서울특별시 종로구", "서울 종로구"),
+			Map.entry("서울특별시 중구", "서울 중구"),
+			Map.entry("서울특별시 용산구", "서울 용산구"),
+			Map.entry("서울특별시 성동구", "서울 성동구"),
+			Map.entry("서울특별시 광진구", "서울 광진구"),
+			Map.entry("서울특별시 동대문구", "서울 동대문구"),
+			Map.entry("서울특별시 중랑구", "서울 중랑구"),
+			Map.entry("서울특별시 성북구", "서울 성북구"),
+			Map.entry("서울특별시 강북구", "서울 강북구"),
+			Map.entry("서울특별시 도봉구", "서울 도봉구"),
+			Map.entry("서울특별시 노원구", "서울 노원구"),
+			Map.entry("서울특별시 은평구", "서울 은평구"),
+			Map.entry("서울특별시 영등포구", "서울 영등포구"),
+			Map.entry("서울특별시 동작구", "서울 동작구"),
+			Map.entry("서울특별시 관악구", "서울 관악구"),
+			Map.entry("서울특별시 서초구", "서울 서초구"),
+			Map.entry("서울특별시 강남구", "서울 강남구"),
+			Map.entry("서울특별시 송파구", "서울 송파구"),
+			Map.entry("서울특별시 강동구", "서울 강동구"),
+			Map.entry("부산광역시 중구", "부산 중구"),
+			Map.entry("부산광역시 서구", "부산 서구"),
+			Map.entry("부산광역시 동구", "부산 동구"),
+			Map.entry("부산광역시 영도구", "부산 영도구"),
+			Map.entry("부산광역시 부산진구", "부산 부산진구"),
+			Map.entry("부산광역시 동래구", "부산 동래구"),
+			Map.entry("부산광역시 남구", "부산 남구"),
+			Map.entry("부산광역시 북구", "부산 북구"),
+			Map.entry("부산광역시 해운대구", "부산 해운대구"),
+			Map.entry("부산광역시 사하구", "부산 사하구"),
+			Map.entry("부산광역시 금정구", "부산 금정구"),
+			Map.entry("부산광역시 강서구", "부산 강서구"),
+			Map.entry("부산광역시 연제구", "부산 연제구"),
+			Map.entry("부산광역시 수영구", "부산 수영구"),
+			Map.entry("부산광역시 사상구", "부산 사상구"),
+			Map.entry("대구광역시 중구", "대구 중구"),
+			Map.entry("대구광역시 동구", "대구 동구"),
+			Map.entry("대구광역시 서구", "대구 서구"),
+			Map.entry("대구광역시 남구", "대구 남구"),
+			Map.entry("대구광역시 북구", "대구 북구"),
+			Map.entry("대구광역시 수성구", "대구 수성구"),
+			Map.entry("대구광역시 달서구", "대구 달서구"),
+			Map.entry("인천광역시 중구", "인천 중구"),
+			Map.entry("인천광역시 동구", "인천 동구"),
+			Map.entry("인천광역시 서구", "인천 서구"),
+			Map.entry("인천광역시 미추홀구", "인천 미추홀구"),
+			Map.entry("인천광역시 연수구", "인천 연수구"),
+			Map.entry("인천광역시 남동구", "인천 남동구"),
+			Map.entry("인천광역시 부평구", "인천 부평구"),
+			Map.entry("인천광역시 계양구", "인천 계양구"),
+			Map.entry("광주광역시 동구", "광주 동구"),
+			Map.entry("광주광역시 서구", "광주 서구"),
+			Map.entry("광주광역시 남구", "광주 남구"),
+			Map.entry("광주광역시 북구", "광주 북구"),
+			Map.entry("광주광역시 광산구", "광주 광산구"),
+			Map.entry("대전광역시 중구", "대전 중구"),
+			Map.entry("대전광역시 동구", "대전 동구"),
+			Map.entry("대전광역시 서구", "대전 서구"),
+			Map.entry("대전광역시 유성구", "대전 유성구"),
+			Map.entry("대전광역시 대덕구", "대전 대덕구"),
+			Map.entry("울산광역시 중구", "울산 중구"),
+			Map.entry("울산광역시 동구", "울산 동구"),
+			Map.entry("울산광역시 남구", "울산 남구"),
+			Map.entry("울산광역시 북구", "울산 북구")
+		);
+		
+		String regionVal = entry.getValue();
+		String dbRegion = regionMap.get(regionVal);
+		
+		if(dbRegion == null) return;
+		
 		for(Crime crime : crimeService.listCrime()) {
 			
-			if(entry.getValue().equals("서울특별시 용산구") && crime.getRegion().equals("서울 용산구")) {
+			if(entry.getValue().equals(regionVal) && crime.getRegion().equals(dbRegion)) {
 				crimeService.updateCrime(new Crime(crime.getCrimeId(), 0, null, 0, Integer.parseInt(entry.getKey()), null));
-			} else if(entry.getValue().equals("서울특별시 광진구") && crime.getRegion().equals("서울 광진구")) {
-				crimeService.updateCrime(new Crime(crime.getCrimeId(), 0, null, 0, Integer.parseInt(entry.getKey()), null));
-			} else if(entry.getValue().equals("서울특별시 동대문구") && crime.getRegion().equals("서울 동대문구")) {
-				crimeService.updateCrime(new Crime(crime.getCrimeId(), 0, null, 0, Integer.parseInt(entry.getKey()), null));
-			} else if(entry.getValue().equals("서울특별시 중랑구") && crime.getRegion().equals("서울 중랑구")) {
-				crimeService.updateCrime(new Crime(crime.getCrimeId(), 0, null, 0, Integer.parseInt(entry.getKey()), null));
-			} else if(entry.getValue().equals("서울특별시 성북구") && crime.getRegion().equals("서울 성북구")) {
-				crimeService.updateCrime(new Crime(crime.getCrimeId(), 0, null, 0, Integer.parseInt(entry.getKey()), null));
-			} else if(entry.getValue().equals("서울특별시 강북구") && crime.getRegion().equals("서울 강북구")) {
-				crimeService.updateCrime(new Crime(crime.getCrimeId(), 0, null, 0, Integer.parseInt(entry.getKey()), null));
-			} else if(entry.getValue().equals("서울특별시 도봉구") && crime.getRegion().equals("서울 도봉구")) {
-				crimeService.updateCrime(new Crime(crime.getCrimeId(), 0, null, 0, Integer.parseInt(entry.getKey()), null));
-			} else if(entry.getValue().equals("서울특별시 성동구") && crime.getRegion().equals("서울 성동구")) {
-				crimeService.updateCrime(new Crime(crime.getCrimeId(), 0, null, 0, Integer.parseInt(entry.getKey()), null));
-			} else if(entry.getValue().equals("서울특별시 노원구") && crime.getRegion().equals("서울 노원구")) {
-				crimeService.updateCrime(new Crime(crime.getCrimeId(), 0, null, 0, Integer.parseInt(entry.getKey()), null));
-			} else if(entry.getValue().equals("서울특별시 은평구") && crime.getRegion().equals("서울 은평구")) {
-				crimeService.updateCrime(new Crime(crime.getCrimeId(), 0, null, 0, Integer.parseInt(entry.getKey()), null));
-			} else if(entry.getValue().equals("서울특별시 영등포구") && crime.getRegion().equals("서울 영등포구")) {
-				crimeService.updateCrime(new Crime(crime.getCrimeId(), 0, null, 0, Integer.parseInt(entry.getKey()), null));
-			} else if(entry.getValue().equals("서울특별시 동작구") && crime.getRegion().equals("서울 동작구")) {
-				crimeService.updateCrime(new Crime(crime.getCrimeId(), 0, null, 0, Integer.parseInt(entry.getKey()), null));
-			} else if(entry.getValue().equals("서울특별시 관악구") && crime.getRegion().equals("서울 관악구")) {
-				crimeService.updateCrime(new Crime(crime.getCrimeId(), 0, null, 0, Integer.parseInt(entry.getKey()), null));
-			} else if(entry.getValue().equals("서울특별시 서초구") && crime.getRegion().equals("서울 서초구")) {
-				crimeService.updateCrime(new Crime(crime.getCrimeId(), 0, null, 0, Integer.parseInt(entry.getKey()), null));
-			} else if(entry.getValue().equals("서울특별시 강남구") && crime.getRegion().equals("서울 강남구")) {
-				crimeService.updateCrime(new Crime(crime.getCrimeId(), 0, null, 0, Integer.parseInt(entry.getKey()), null));
-			} else if(entry.getValue().equals("서울특별시 송파구") && crime.getRegion().equals("서울 송파구")) {
-				crimeService.updateCrime(new Crime(crime.getCrimeId(), 0, null, 0, Integer.parseInt(entry.getKey()), null));
-			} else if(entry.getValue().equals("서울특별시 강동구") && crime.getRegion().equals("서울 강동구")) {
-				crimeService.updateCrime(new Crime(crime.getCrimeId(), 0, null, 0, Integer.parseInt(entry.getKey()), null));
-			} else if(entry.getValue().equals("서울특별시 종로구") && crime.getRegion().equals("서울 종로구")) {
-				crimeService.updateCrime(new Crime(crime.getCrimeId(), 0, null, 0, Integer.parseInt(entry.getKey()), null));
-			} else if(entry.getValue().equals("부산광역시 중구") && crime.getRegion().equals("부산 중구")) {
-				crimeService.updateCrime(new Crime(crime.getCrimeId(), 0, null, 0, Integer.parseInt(entry.getKey()), null));
-			} else if(entry.getValue().equals("부산광역시 서구") && crime.getRegion().equals("부산 서구")) {
-				crimeService.updateCrime(new Crime(crime.getCrimeId(), 0, null, 0, Integer.parseInt(entry.getKey()), null));
-			} else if(entry.getValue().equals("부산광역시 동구") && crime.getRegion().equals("부산 동구")) {
-				crimeService.updateCrime(new Crime(crime.getCrimeId(), 0, null, 0, Integer.parseInt(entry.getKey()), null));
-			} else if(entry.getValue().equals("부산광역시 영도구") && crime.getRegion().equals("부산 영도구")) {
-				crimeService.updateCrime(new Crime(crime.getCrimeId(), 0, null, 0, Integer.parseInt(entry.getKey()), null));
-			} else if(entry.getValue().equals("부산광역시 부산진구") && crime.getRegion().equals("부산 부산진구")) {
-				crimeService.updateCrime(new Crime(crime.getCrimeId(), 0, null, 0, Integer.parseInt(entry.getKey()), null));
-			} else if(entry.getValue().equals("부산광역시 동래구") && crime.getRegion().equals("부산 동래구")) {
-				crimeService.updateCrime(new Crime(crime.getCrimeId(), 0, null, 0, Integer.parseInt(entry.getKey()), null));
-			} else if(entry.getValue().equals("부산광역시 남구") && crime.getRegion().equals("부산 남구")) {
-				crimeService.updateCrime(new Crime(crime.getCrimeId(), 0, null, 0, Integer.parseInt(entry.getKey()), null));
-			} else if(entry.getValue().equals("부산광역시 북구") && crime.getRegion().equals("부산 북구")) {
-				crimeService.updateCrime(new Crime(crime.getCrimeId(), 0, null, 0, Integer.parseInt(entry.getKey()), null));
-			} else if(entry.getValue().equals("부산광역시 해운대구") && crime.getRegion().equals("부산 해운대구")) {
-				crimeService.updateCrime(new Crime(crime.getCrimeId(), 0, null, 0, Integer.parseInt(entry.getKey()), null));
-			} else if(entry.getValue().equals("부산광역시 사하구") && crime.getRegion().equals("부산 사하구")) {
-				crimeService.updateCrime(new Crime(crime.getCrimeId(), 0, null, 0, Integer.parseInt(entry.getKey()), null));
-			} else if(entry.getValue().equals("부산광역시 금정구") && crime.getRegion().equals("부산 금정구")) {
-				crimeService.updateCrime(new Crime(crime.getCrimeId(), 0, null, 0, Integer.parseInt(entry.getKey()), null));
-			} else if(entry.getValue().equals("부산광역시 강서구") && crime.getRegion().equals("부산 강서구")) {
-				crimeService.updateCrime(new Crime(crime.getCrimeId(), 0, null, 0, Integer.parseInt(entry.getKey()), null));
-			} else if(entry.getValue().equals("부산광역시 연제구") && crime.getRegion().equals("부산 연제구")) {
-				crimeService.updateCrime(new Crime(crime.getCrimeId(), 0, null, 0, Integer.parseInt(entry.getKey()), null));
-			} else if(entry.getValue().equals("부산광역시 수영구") && crime.getRegion().equals("부산 수영구")) {
-				crimeService.updateCrime(new Crime(crime.getCrimeId(), 0, null, 0, Integer.parseInt(entry.getKey()), null));
-			} else if(entry.getValue().equals("부산광역시 사상구") && crime.getRegion().equals("부산 사상구")) {
-				crimeService.updateCrime(new Crime(crime.getCrimeId(), 0, null, 0, Integer.parseInt(entry.getKey()), null));
-			} else if(entry.getValue().equals("대구광역시 중구") && crime.getRegion().equals("대구 중구")) {
-				crimeService.updateCrime(new Crime(crime.getCrimeId(), 0, null, 0, Integer.parseInt(entry.getKey()), null));
-			} else if(entry.getValue().equals("대구광역시 동구") && crime.getRegion().equals("대구 동구")) {
-				crimeService.updateCrime(new Crime(crime.getCrimeId(), 0, null, 0, Integer.parseInt(entry.getKey()), null));
-			}  else if(entry.getValue().equals("대구광역시 서구") && crime.getRegion().equals("대구 서구")) {
-				crimeService.updateCrime(new Crime(crime.getCrimeId(), 0, null, 0, Integer.parseInt(entry.getKey()), null));
-			} else if(entry.getValue().equals("대구광역시 남구") && crime.getRegion().equals("대구 남구")) {
-				crimeService.updateCrime(new Crime(crime.getCrimeId(), 0, null, 0, Integer.parseInt(entry.getKey()), null));
-			} else if(entry.getValue().equals("대구광역시 북구") && crime.getRegion().equals("대구 북구")) {
-				crimeService.updateCrime(new Crime(crime.getCrimeId(), 0, null, 0, Integer.parseInt(entry.getKey()), null));
-			} else if(entry.getValue().equals("대구광역시 수성구") && crime.getRegion().equals("대구 수성구")) {
-				crimeService.updateCrime(new Crime(crime.getCrimeId(), 0, null, 0, Integer.parseInt(entry.getKey()), null));
-			} else if(entry.getValue().equals("대구광역시 달서구") && crime.getRegion().equals("대구 달서구")) {
-				crimeService.updateCrime(new Crime(crime.getCrimeId(), 0, null, 0, Integer.parseInt(entry.getKey()), null));
-			} else if(entry.getValue().equals("인천광역시 중구") && crime.getRegion().equals("인천 중구")) {
-				crimeService.updateCrime(new Crime(crime.getCrimeId(), 0, null, 0, Integer.parseInt(entry.getKey()), null));
-			} else if(entry.getValue().equals("인천광역시 동구") && crime.getRegion().equals("인천 동구")) {
-				crimeService.updateCrime(new Crime(crime.getCrimeId(), 0, null, 0, Integer.parseInt(entry.getKey()), null));
-			} else if(entry.getValue().equals("인천광역시 서구") && crime.getRegion().equals("인천 서구")) {
-				crimeService.updateCrime(new Crime(crime.getCrimeId(), 0, null, 0, Integer.parseInt(entry.getKey()), null));
-			} else if(entry.getValue().equals("인천광역시 미추홀구") && crime.getRegion().equals("인천 미추홀구")) {
-				crimeService.updateCrime(new Crime(crime.getCrimeId(), 0, null, 0, Integer.parseInt(entry.getKey()), null));
-			} else if(entry.getValue().equals("인천광역시 연수구") && crime.getRegion().equals("인천 연수구")) {
-				crimeService.updateCrime(new Crime(crime.getCrimeId(), 0, null, 0, Integer.parseInt(entry.getKey()), null));
-			} else if(entry.getValue().equals("인천광역시 남동구") && crime.getRegion().equals("인천 남동구")) {
-				crimeService.updateCrime(new Crime(crime.getCrimeId(), 0, null, 0, Integer.parseInt(entry.getKey()), null));
-			} else if(entry.getValue().equals("인천광역시 부평구") && crime.getRegion().equals("인천 부평구")) {
-				crimeService.updateCrime(new Crime(crime.getCrimeId(), 0, null, 0, Integer.parseInt(entry.getKey()), null));
-			} else if(entry.getValue().equals("인천광역시 계양구") && crime.getRegion().equals("인천 계양구")) {
-				crimeService.updateCrime(new Crime(crime.getCrimeId(), 0, null, 0, Integer.parseInt(entry.getKey()), null));
-			} else if(entry.getValue().equals("광주광역시 동구") && crime.getRegion().equals("광주 동구")) {
-				crimeService.updateCrime(new Crime(crime.getCrimeId(), 0, null, 0, Integer.parseInt(entry.getKey()), null));
-			} else if(entry.getValue().equals("광주광역시 서구") && crime.getRegion().equals("광주 서구")) {
-				crimeService.updateCrime(new Crime(crime.getCrimeId(), 0, null, 0, Integer.parseInt(entry.getKey()), null));
-			} else if(entry.getValue().equals("광주광역시 남구") && crime.getRegion().equals("광주 남구")) {
-				crimeService.updateCrime(new Crime(crime.getCrimeId(), 0, null, 0, Integer.parseInt(entry.getKey()), null));
-			} else if(entry.getValue().equals("광주광역시 북구") && crime.getRegion().equals("광주 북구")) {
-				crimeService.updateCrime(new Crime(crime.getCrimeId(), 0, null, 0, Integer.parseInt(entry.getKey()), null));
-			} else if(entry.getValue().equals("광주광역시 광산구") && crime.getRegion().equals("광주 광산구")) {
-				crimeService.updateCrime(new Crime(crime.getCrimeId(), 0, null, 0, Integer.parseInt(entry.getKey()), null));
-			} else if(entry.getValue().equals("대전광역시 중구") && crime.getRegion().equals("대전 중구")) {
-				crimeService.updateCrime(new Crime(crime.getCrimeId(), 0, null, 0, Integer.parseInt(entry.getKey()), null));
-			} else if(entry.getValue().equals("대전광역시 동구") && crime.getRegion().equals("대전 동구")) {
-				crimeService.updateCrime(new Crime(crime.getCrimeId(), 0, null, 0, Integer.parseInt(entry.getKey()), null));
-			} else if(entry.getValue().equals("대전광역시 서구") && crime.getRegion().equals("대전 서구")) {
-				crimeService.updateCrime(new Crime(crime.getCrimeId(), 0, null, 0, Integer.parseInt(entry.getKey()), null));
-			} else if(entry.getValue().equals("대전광역시 유성구") && crime.getRegion().equals("대전 유성구")) {
-				crimeService.updateCrime(new Crime(crime.getCrimeId(), 0, null, 0, Integer.parseInt(entry.getKey()), null));
-			} else if(entry.getValue().equals("대전광역시 대덕구") && crime.getRegion().equals("대전 대덕구")) {
-				crimeService.updateCrime(new Crime(crime.getCrimeId(), 0, null, 0, Integer.parseInt(entry.getKey()), null));
-			} else if(entry.getValue().equals("울산광역시 중구") && crime.getRegion().equals("울산 중구")) {
-				crimeService.updateCrime(new Crime(crime.getCrimeId(), 0, null, 0, Integer.parseInt(entry.getKey()), null));
-			} else if(entry.getValue().equals("울산광역시 동구") && crime.getRegion().equals("울산 동구")) {
-				crimeService.updateCrime(new Crime(crime.getCrimeId(), 0, null, 0, Integer.parseInt(entry.getKey()), null));
-			} else if(entry.getValue().equals("울산광역시 남구") && crime.getRegion().equals("울산 남구")) {
-				crimeService.updateCrime(new Crime(crime.getCrimeId(), 0, null, 0, Integer.parseInt(entry.getKey()), null));
-			} else if(entry.getValue().equals("울산광역시 북구") && crime.getRegion().equals("울산 북구")) {
-				crimeService.updateCrime(new Crime(crime.getCrimeId(), 0, null, 0, Integer.parseInt(entry.getKey()), null));
-			} 
+			}
+			
 		}
-	}
+		
+	} // addRegionIdToCrime
 	
 }
