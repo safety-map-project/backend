@@ -28,7 +28,14 @@ public class CrimeServiceTest {
 				regionMap.put(region.getRegionId(), region.getGu());
 			}
 			
-			System.out.println(regionMap);
+//			System.out.println(regionMap.keySet().toString());
+//			System.out.println(regionMap.values());
+			
+			for(String regionId : regionMap.keySet()) {
+				System.out.println(regionId);
+			}
+			
+			
 			
 //			List<Crime> crimeList = CrimeAPI.getCrimeList(CrimeAPI.getCrimeAPI());
 //			for(Crime crime : crimeList) {
