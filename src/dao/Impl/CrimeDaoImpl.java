@@ -4,10 +4,12 @@ import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.util.ArrayList;
 import java.util.List;
 
 import dao.CrimeDao;
 import model.Crime;
+import model.Region;
 import util.ConnectionUtil;
 import util.APIUtil.CrimeAPI;
 
@@ -24,7 +26,21 @@ public class CrimeDaoImpl implements CrimeDao {
 
 	@Override
 	public List<Crime> listCrime() throws SQLException {
-		return null;
+		String sql = " select crimeId, crimeYear, regionId, crimeType, crimeCount, regionname  from crime ";
+		pstmt = conn.prepareStatement(sql);
+		rs = pstmt.executeQuery();
+		List<Crime> CrimeList = new ArrayList<Crime>();
+		while(rs.next()) {
+			Crime crime = new Crime();
+			crime.setCrimeId(rs.getInt("crimeId"));
+			crime.setCrimeYear(rs.getInt("crimeYear"));
+			crime.setRegionId(rs.getInt("regionId"));
+			crime.setCrimeType(rs.getString("crimeType"));
+			crime.setCrimeCount(rs.getInt("crimeCount"));
+			crime.setRegion(rs.getString("regionname"));
+			CrimeList.add(crime);
+		}
+		return CrimeList;
 	}
 
 	@Override
@@ -36,21 +52,28 @@ public class CrimeDaoImpl implements CrimeDao {
 	public int insertCrime(Crime crime) throws SQLException {
 		
 		// crimeId, crimeYear, regionId, crimeType, crimeCount, region
-		String sql = " insert into crime values(seq_crime.nextval, ?, ?, ?, ?, ?) ";
-		pstmt = conn.prepareStatement(sql);
-
+		String insertSql = " insert into crime(crimeid, crimeyear, crimetype, crimecount, regionid, regionname) "
+				+ " values(seq_crime.nextval, ?, ?, ?, 29155, ?) ";
+		pstmt = conn.prepareStatement(insertSql);
+		
 		pstmt.setInt(1, crime.getCrimeYear());
-		pstmt.setInt(2, crime.getRegionId());
-		pstmt.setString(3, crime.getCrimeType());
-		pstmt.setInt(4, crime.getCrimeCount());
-		pstmt.setString(5, crime.getRegion());			
+		pstmt.setString(2, crime.getCrimeType());
+		pstmt.setInt(3, crime.getCrimeCount());
+//		pstmt.setInt(4, regionidList.get());
+		pstmt.setString(4, crime.getRegion());
 		
 		return pstmt.executeUpdate();
 	}
 
 	@Override
 	public int updateCrime(Crime crime) throws SQLException {
-		return 0;
+		
+		String updateRegionIdsql = " update crime set regionid=? where crimeid=? ";
+		pstmt = conn.prepareStatement(updateRegionIdsql);
+		pstmt.setInt(1, crime.getRegionId());
+		pstmt.setInt(2, crime.getCrimeId());
+		
+		return pstmt.executeUpdate();
 	}
 
 	@Override

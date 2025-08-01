@@ -10,6 +10,7 @@ import java.util.List;
 import dao.RegionDao;
 import model.Region;
 import util.ConnectionUtil;
+import util.APIUtil.SiAPI;
 
 public class RegionDaoImpl implements RegionDao {
 
@@ -23,7 +24,7 @@ public class RegionDaoImpl implements RegionDao {
 
 	@Override
 	public List<Region> listRegion() throws SQLException {
-		String sql = " select regionid, gu from MAP.region ";
+		String sql = " select regionid, gu, si from MAP.region ";
 		pstmt = conn.prepareStatement(sql);
 		rs = pstmt.executeQuery();
 		List<Region> regionList = new ArrayList<Region>();
@@ -31,6 +32,7 @@ public class RegionDaoImpl implements RegionDao {
 			Region region = new Region();
 			region.setRegionId(rs.getString("regionid"));
 			region.setGu(rs.getString("gu"));
+			region.setSi(rs.getString("si"));
 			regionList.add(region);
 		}
 		return regionList;
@@ -52,7 +54,13 @@ public class RegionDaoImpl implements RegionDao {
 
 	@Override
 	public int updateRegion(Region region) throws SQLException {
-		return 0;
+		
+		String sql = " update region set si=? where regionid=? ";
+		pstmt = conn.prepareStatement(sql);
+		pstmt.setString(1, region.getSi());
+		pstmt.setString(2, region.getRegionId());
+		
+		return pstmt.executeUpdate();
 	}
 
 	@Override
