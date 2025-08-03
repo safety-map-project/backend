@@ -4,7 +4,6 @@ import java.io.FileReader;
 import java.io.Reader;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Map;
 
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
@@ -23,67 +22,70 @@ public class CoordAPI {
 		
 		List<Coord> coordList = new ArrayList<Coord>();
 		
-		try(Reader reader = new FileReader("C:\\Users\\Administrator\\git\\backend\\src\\util\\APIUtil\\sigu.json")) {
+		try(Reader reader = new FileReader("C:\\Users\\kjm90\\git\\backend\\src\\util\\APIUtil\\sigu.json")) {
 			
 			JsonObject obj = JsonParser.parseReader(reader).getAsJsonObject();
 //			System.out.println(obj);
 			JsonArray features = obj.get("features").getAsJsonArray();
 			
-			
-			for(JsonElement ele : features) { 
-				
-				System.out.println(ele);
+			for(JsonElement feature : features) { 
+//				System.out.println(ele);
+				JsonObject featureObj = feature.getAsJsonObject();
+				JsonObject properties = featureObj.getAsJsonObject("properties");
 				
 				String sig_kor_nm 
-				= ele.getAsJsonObject()
-				.get("properties")
-				.getAsJsonObject()
+				= properties
 				.get("SIG_KOR_NM")
-				.getAsString();
+				.getAsString()
+				.trim();
 				
-				
-				if(!sig_kor_nm.trim().contains("구")) {
+				if(!sig_kor_nm.endsWith("구")) {
 					continue;
 				}
 				
 //				지역코드
 				String regionId 
-				= ele.getAsJsonObject()
-				.get("properties")
-				.getAsJsonObject()
+				= properties
 				.get("SIG_CD")
 				.getAsString();
-//				System.out.println("regionId 출력: " + regionId);
 				
 				
 //				위도경도 쌍 배열을 요소로 가진 배열
 				JsonArray coordinates 
-					= ele.getAsJsonObject()
-					.get("geometry")
-					.getAsJsonObject()
-					.get("coordinates")
-					.getAsJsonArray().get(0)
-					.getAsJsonArray();
+					= featureObj
+					.getAsJsonObject("geometry")
+					.getAsJsonArray("coordinates");
 				
-				for(JsonElement coord : coordinates) {
-					double lat = coord.getAsJsonArray().get(1).getAsDouble(); // 위도
-					double log = coord.getAsJsonArray().get(0).getAsDouble(); // 경도
+				JsonArray outerRing = coordinates.get(0).getAsJsonArray();
+				
+				for(JsonElement points : outerRing) {
+					JsonArray coord = points.getAsJsonArray();
+					double lat = coord.get(1).getAsDouble();
+					double log = coord.get(0).getAsDouble();
 					coordList.add(new Coord(0, lat, log, regionId));
 				}
 			
-				return coordList;
 			}
 			
 			
 		}catch(Exception e) {
 			e.printStackTrace();
 		}
-		return null;
+		
+		return coordList;
+
 		
 	} // makeCoordList
 	
-//	public static void main(String[] args) {
+	public static void main(String[] args) {
 //		System.out.println(makeCoordList());
-//	}
+		
+		
+		List<Coord> cList = makeCoordList();
+//		System.out.println("총 Coord 개수: " + cList.size());
+
+		cList.stream().limit(10).forEach(System.out::println);
+		
+	}
 	
 }

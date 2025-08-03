@@ -14,25 +14,25 @@ public class CoordServiceTest {
 
 	public static void main(String[] args) {
 		
-		List<Coord> coordList = CoordAPI.makeCoordList();
-		coordList.stream().forEach(System.out::println);
-		//		CoordService coordService = new CoordServiceImpl();
+//		CoordService coordService = new CoordServiceImpl();
 //		
-//		try {
-//			
-//			int result = 0;
-//			List<Coord> coordList = CoordAPI.makeCoordList();
-//			for(Coord coord : coordList) {
-//				result = coordService.insertCoord(coord);
-//				if(result>0) result++;
+//		List<Coord> coordList = CoordAPI.makeCoordList();
+//		for(Coord coord : coordList) {
+//			try {
+//				coordService.insertCoord(
+//						new Coord(coord.getCoordId()
+//								, coord.getLat()
+//								, coord.getLog()
+//								, coord.getRegionId()));
+//			} catch (SQLException e) {
+//				// TODO Auto-generated catch block
+//				e.printStackTrace();
 //			}
-//			System.out.println(result + "건 등록 완료");
-//			
-//			
-//			
-//		} catch(SQLException sqle) {
-//			sqle.printStackTrace();
 //		}
+		List<Coord> coordList = CoordAPI.makeCoordList();
+		for(Coord coord : coordList) {
+			System.out.println(coord);
+		}
 		
 	}
 	
