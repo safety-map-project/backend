@@ -8,6 +8,7 @@ import com.sun.net.httpserver.HttpServer;
 import httpHandler.CCTVHandler;
 import httpHandler.CrimeHandler;
 import httpHandler.TestHandler;
+import httpHandler.TestHandler2;
 import httpHandler.PoliceHandler;
 import httpHandler.RegionHandler;
 
@@ -28,6 +29,7 @@ public class HttpServerMain {
 			httpServer.createContext("/api/crime", new CrimeHandler());
 			httpServer.createContext("/api/region", new RegionHandler());
 			httpServer.createContext("/test", new TestHandler());
+			httpServer.createContext("/test2", new TestHandler2());
 			
 			httpServer.setExecutor(null); // executor null: 단일 스레드 사용
 			httpServer.start(); // 서버 시작
