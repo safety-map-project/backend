@@ -9,13 +9,13 @@ public class Cctv implements Serializable {
 	private int cctvId; // cctv아이디
 	private String location; // 위치(주소)
 	private int regionId; // 지역아이디
-	private int lat; // 위도
-	private int log; // 경도
+	private double lat; // 위도
+	private double log; // 경도
 
 	public Cctv() {
 	}
 
-	public Cctv(int cctvId, String location, int regionId, int lat, int log) {
+	public Cctv(int cctvId, String location, int regionId, double lat, double log) {
 		this.cctvId = cctvId;
 		this.location = location;
 		this.regionId = regionId;
@@ -47,19 +47,19 @@ public class Cctv implements Serializable {
 		this.regionId = regionId;
 	}
 
-	public int getLat() {
+	public double getLat() {
 		return lat;
 	}
 
-	public void setLat(int lat) {
+	public void setLat(double lat) {
 		this.lat = lat;
 	}
 
-	public int getLog() {
+	public double getLog() {
 		return log;
 	}
 
-	public void setLog(int log) {
+	public void setLog(double log) {
 		this.log = log;
 	}
 
