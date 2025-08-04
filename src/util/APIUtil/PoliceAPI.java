@@ -1,5 +1,6 @@
 package util.APIUtil;
 
+import java.io.FileReader;
 import java.io.IOException;
 import java.net.URI;
 import java.net.http.HttpClient;
@@ -18,57 +19,54 @@ import model.Police;
 
 public class PoliceAPI {
 
-	// 파출소 API 주소
-	private static String PoliceAPI_URL = "https://api.odcloud.kr/api/15077036/v1/uddi:6b371c66-09a5-4efd-8445-bfd53672542e?page=1&perPage=2100&serviceKey=QvgnWQKUCrQ%2BqCLLRnIed%2BwfPlYFx7tS1JNhyY%2F9KwVyrLLMWGzLj565XUBiT6NYFl2kmqf6T%2B5BqoS6RVryLg%3D%3D";
+	private static final String PoliceAPI_URL = "https://api.odcloud.kr/api/15077036/v1/uddi:6b371c66-09a5-4efd-8445-bfd53672542e?page=1&perPage=2100&serviceKey=QvgnWQKUCrQ%2BqCLLRnIed%2BwfPlYFx7tS1JNhyY%2F9KwVyrLLMWGzLj565XUBiT6NYFl2kmqf6T%2B5BqoS6RVryLg%3D%3D";
+	private static final String locationFilePath = "C:\\pub2504\\eclipse_workspace\\project\\location.json";
 
-	// 클라이언트 객체 생성
-	private static HttpClient client = HttpClient.newHttpClient();
+	private static final HttpClient client = HttpClient.newHttpClient();
 
-	// API에서 JSON 데이터 가져오는 메서드
 	public String getPoliceAPI() throws IOException, InterruptedException {
-
-		// 요청 데이터
 		HttpRequest request = HttpRequest.newBuilder().uri(URI.create(PoliceAPI_URL)).GET().build();
-
-		// 서버에 요청
-		HttpResponse response = client.send(request, BodyHandlers.ofString());
-		String jsonStr = (String) response.body();
-
-		return jsonStr; // josn 문자열 반환
+		HttpResponse<?> response = client.send(request, BodyHandlers.ofString());
+		return (String) response.body();
 	}
 
-	// json 문자열을 인자로 받아서 리스트에 넣는 메서드
-	public List<Police> insertPoliceList(String jsonStr) {
+	public List<Police> insertPoliceList(String jsonStr) throws IOException {
 		List<Police> policeList = new ArrayList<>();
 		Gson gson = new Gson();
+
+		// json 데이터 파싱 
 		JsonObject jsonObject = gson.fromJson(jsonStr, JsonObject.class);
-		JsonArray jsonArray = jsonObject.getAsJsonArray("data");
+		JsonArray apiArray = jsonObject.getAsJsonArray("data");
 
-		for (JsonElement element : jsonArray) {
-			JsonObject dataObject = element.getAsJsonObject();
+		// 엑셀 데이터 파싱 
+		FileReader reader = new FileReader(locationFilePath); // 2045개
+		JsonArray locationArray = gson.fromJson(reader, JsonArray.class); // 2045개
 
-			// 관서명 + 구분
-			String policeAddress = dataObject.get("관서명").getAsString() + " " + dataObject.get("구분").getAsString();
+		int count = Math.min(apiArray.size(), locationArray.size());
 
-			// 풀 주소
-			String fullLocation = dataObject.get("주소").getAsString();
+		for (int i = 0; i < count; i++) {
+			JsonObject apiObj = apiArray.get(i).getAsJsonObject();
+			JsonObject locObj = locationArray.get(i).getAsJsonObject();
 
-			// 서울시 강남구 인덱스 값 추출
-			int siIdx = fullLocation.indexOf(" ");
-			int guIdx = fullLocation.indexOf(" ", siIdx + 1);
+			JsonElement regionElement = locObj.get("RegionId");
+			if (regionElement == null || regionElement.isJsonNull()) {
+				continue;
+			}
 
-			// 서울시 + 강남구 추출
-			String si = fullLocation.substring(0, siIdx);
-			String gu = fullLocation.substring(siIdx + 1, guIdx);
-			String sigu = si + " " + gu;
+			String policeName = apiObj.get("관서명").getAsString();
+			String policeType = apiObj.get("구분").getAsString();
+			String policeAddress = policeName + " " + policeType; 
 
 			Police police = new Police();
-			police.setPolice_address(policeAddress); // 관서 + 구분
-			police.setLocation(sigu); // 시 + 구
+			police.setPolice_address(policeAddress); // 관서명+구분> Name
+			police.setLocation(locObj.get("주소").getAsString()); // > Location
+			police.setLat(locObj.get("Lat").getAsDouble()); // lat
+			police.setLog(locObj.get("Log").getAsDouble()); // log
+			police.setRegionId(regionElement.getAsInt()); //regionid
+
 			policeList.add(police);
 		}
 
 		return policeList;
 	}
-
 }
