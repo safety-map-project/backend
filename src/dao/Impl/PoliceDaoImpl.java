@@ -4,6 +4,7 @@ import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.util.ArrayList;
 import java.util.List;
 
 import dao.PoliceDao;
@@ -49,7 +50,21 @@ public class PoliceDaoImpl implements PoliceDao {
 
 	@Override
 	public List<Police> listPolice() throws SQLException {
-		return null;
+		String sql = " select policeid, location, lat, log, regionId, name from map.police ";
+		pstmt = conn.prepareStatement(sql);
+		rs = pstmt.executeQuery();
+		List<Police> policeList = new ArrayList<Police>();
+		while(rs.next()) {
+			Police police = new Police();
+			police.setPoliceId(rs.getInt("policeid"));
+			police.setLocation(rs.getString("location"));
+			police.setLat(rs.getInt("lat"));
+			police.setLog(rs.getInt("log"));
+			police.setRegionId(rs.getInt("regionId"));
+			police.setName(rs.getString("name"));
+			policeList.add(police);
+		}
+		return policeList;
 	}
 
 	@Override

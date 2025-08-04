@@ -83,8 +83,8 @@ public class Crime implements Serializable {
 
 	@Override
 	public String toString() {
-		return "Crime [crimeId=" + crimeId + ", crimeYear=" + crimeYear + ", regionId=" + regionId + ", crimeType="
-				+ crimeType + ", crimeCount=" + crimeCount + ", region=" + region + "]";
+		return "{ crimeId: " + crimeId + ", crimeYear: " + crimeYear + ", regionId: " + regionId + ", crimeType: "
+				+ crimeType + ", crimeCount: " + crimeCount + ", region: " + region + "}";
 	}
 
 }
