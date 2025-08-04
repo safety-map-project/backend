@@ -1,36 +1,35 @@
 package main;
 
 import java.io.IOException;
+import java.sql.SQLException;
 import java.util.List;
 
+import dao.Impl.PoliceDaoImpl;
 import model.Police;
 import util.APIUtil.PoliceAPI;
 
 public class PoliceServiceTest {
 
 	public static void main(String[] args) {
-
-		PoliceAPI api = new PoliceAPI();
+		PoliceDaoImpl dao = new PoliceDaoImpl();
+		PoliceAPI police = new PoliceAPI();
+		List<Police> policeList;
 
 		try {
-			String jsonStr = api.getPoliceAPI();
-			// 객체들을 넣은 리스트 받아옴
-			List<Police> policeList = api.insertPoliceList(jsonStr);
+			policeList = police.insertPoliceList(police.getPoliceAPI());
+			int result = dao.insertPolice(policeList);
 
-			long count = policeList.stream().count();
-			System.out.println("데이터 개수 : " + count);
+			System.out.println("총 파출소 수: " + policeList.size());
+			System.out.println("저장된 파출소 수: " + result);
 
-			policeList.stream().forEach(element -> {
-				System.out.println("파출소명 : " + element.getPolice_address());
-				System.out.println("주소 : " + element.getLocation());
-			});
-
-		} catch (IOException e) {
-			e.printStackTrace();
-		} catch (Exception e) {
+			if (result == policeList.size()) {
+				System.out.println("파출소 데이터 저장 완료");
+			} else {
+				System.out.println("저장 중 일부 오류 발생");
+			}
+		} catch (IOException | InterruptedException | SQLException e) {
+			System.out.println("저장 중 오류 발생");
 			e.printStackTrace();
 		}
-
 	}
-
 }
