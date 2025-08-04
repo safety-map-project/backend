@@ -8,23 +8,30 @@ public class Police implements Serializable {
 
 	private int policeId; // 파출소아이디
 	private String location; // 위치(주소)
+	private String police_address; // 을지 지구대
 	private int regionId; // 지역아이디
-	private int lat; // 위도
-	private int log; // 경도
+	private double lat; // 위도
+	private double log; // 경도
 
 	public Police() {
 	}
 
-	public Police(String location) {
-		this.location=location;
-	}
-
-	public Police(int policeId, String location, int regionId, int lat, int log) {
+	public Police(int policeId, String location, String police_address, int regionId, double lat, double log) {
+		super();
 		this.policeId = policeId;
 		this.location = location;
+		this.police_address = police_address;
 		this.regionId = regionId;
 		this.lat = lat;
 		this.log = log;
+	}
+
+	public String getPolice_address() {
+		return police_address;
+	}
+
+	public void setPolice_address(String police_address) {
+		this.police_address = police_address;
 	}
 
 	public int getPoliceId() {
@@ -51,26 +58,26 @@ public class Police implements Serializable {
 		this.regionId = regionId;
 	}
 
-	public int getLat() {
+	public double getLat() {
 		return lat;
 	}
 
-	public void setLat(int lat) {
+	public void setLat(double lat) {
 		this.lat = lat;
 	}
 
-	public int getLog() {
+	public double getLog() {
 		return log;
 	}
 
-	public void setLog(int log) {
+	public void setLog(double log) {
 		this.log = log;
 	}
 
 	@Override
 	public String toString() {
-		return "Police [policeId=" + policeId + ", location=" + location + ", regionId=" + regionId + ", lat=" + lat
-				+ ", log=" + log + "]";
+		return "Police [policeId=" + policeId + ", location=" + location + ", police_address=" + police_address
+				+ ", regionId=" + regionId + ", lat=" + lat + ", log=" + log + "]";
 	}
 
 }

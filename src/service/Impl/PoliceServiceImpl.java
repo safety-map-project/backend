@@ -1,5 +1,6 @@
 package service.Impl;
 
+import java.io.IOException;
 import java.sql.SQLException;
 import java.util.List;
 
@@ -8,10 +9,10 @@ import dao.Impl.PoliceDaoImpl;
 import model.Police;
 import service.PoliceService;
 
-public class PoliceServiceImpl implements PoliceService{
+public class PoliceServiceImpl implements PoliceService {
 
 	private PoliceDao policeDao;
-	
+
 	public PoliceServiceImpl() {
 		policeDao = new PoliceDaoImpl();
 	}
@@ -27,7 +28,7 @@ public class PoliceServiceImpl implements PoliceService{
 	}
 
 	@Override
-	public int insertPolice(Police police) throws SQLException {
+	public int insertPolice(Police police) throws SQLException, IOException, InterruptedException {
 		return policeDao.insertPolice(police);
 	}
 
@@ -40,7 +41,5 @@ public class PoliceServiceImpl implements PoliceService{
 	public int deletePolice(int policeId) throws SQLException {
 		return policeDao.deletePolice(policeId);
 	}
-	
-	
-	
+
 }
