@@ -46,12 +46,12 @@ public class RegionAPI {
 				String sig_kor_nm = properties.get("SIG_KOR_NM").getAsString();
 				
 				String gu = sig_kor_nm;
-				if(gu.contains("시")) {
-					int idx = sig_kor_nm.indexOf("시");
-					gu = sig_kor_nm.substring(0, idx+1).trim(); // 시까지 자름
-				} else {
-					gu = sig_kor_nm.trim();
-				}
+//				if(gu.contains("시")) {
+//					int idx = sig_kor_nm.indexOf("시");
+//					gu = sig_kor_nm.substring(0, idx+1).trim(); // 시까지 자름
+//				} else {
+//					gu = sig_kor_nm.trim();
+//				}
 				
 //				properties 객체에서 지역아이디랑 구만 꺼내서 생성자에 넣는다.
 				if(gu.endsWith("구")) {

@@ -15,7 +15,13 @@ public class RegionServiceTest {
 		
 		RegionService regionService = new RegionServiceImpl();
 		try {
-			regionService.listRegion().stream().forEach(System.out::println);;
+			regionService.listRegion().stream().forEach(System.out::println);
+			List<Region> regionList = RegionAPI.makeRegionList();
+			
+			for(Region region : regionList) {
+				regionService.insertRegion(region);
+			}
+			System.out.println("등록 완료");
 			
 		} catch (SQLException e) {
 			// TODO Auto-generated catch block

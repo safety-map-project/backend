@@ -22,7 +22,7 @@ public class CoordAPI {
 		
 		List<Coord> coordList = new ArrayList<Coord>();
 		
-		try(Reader reader = new FileReader("C:\\Users\\kjm90\\git\\backend\\src\\util\\APIUtil\\sigu.json")) {
+		try(Reader reader = new FileReader("C:\\Users\\Administrator\\git\\backend\\src\\util\\APIUtil\\sigu.json")) {
 			
 			JsonObject obj = JsonParser.parseReader(reader).getAsJsonObject();
 //			System.out.println(obj);
@@ -33,22 +33,22 @@ public class CoordAPI {
 				JsonObject featureObj = feature.getAsJsonObject();
 				JsonObject properties = featureObj.getAsJsonObject("properties");
 				
-				String sig_kor_nm 
+				String gu_name 
 				= properties
 				.get("SIG_KOR_NM")
 				.getAsString()
 				.trim();
 				
-				if(!sig_kor_nm.endsWith("구")) {
+				if(!gu_name.endsWith("구")) {
 					continue;
 				}
 				
 //				지역코드
-				String regionId 
+				int regionId 
 				= properties
 				.get("SIG_CD")
-				.getAsString();
-				
+				.getAsInt();
+		
 				
 //				위도경도 쌍 배열을 요소로 가진 배열
 				JsonArray coordinates 
@@ -64,7 +64,7 @@ public class CoordAPI {
 					JsonArray coord = points.getAsJsonArray();
 					double lat = coord.get(1).getAsDouble();
 					double log = coord.get(0).getAsDouble();
-					coordList.add(new Coord(0, lat, log, regionId));
+					coordList.add(new Coord(0, lat, log, regionId, gu_name));
 				}
 //				System.out.println("coordList size : "+coordList.size());
 //				coordList.stream().forEach(System.out::println);
@@ -85,8 +85,9 @@ public class CoordAPI {
 //		System.out.println(makeCoordList());
 		
 		
-		List<Coord> cList = makeCoordList();
+//		List<Coord> cList = makeCoordList();
 //		System.out.println("총 Coord 개수: " + cList.size());
+//		System.out.println(cList);
 
 //		cList.stream().limit(10).forEach(System.out::println);
 //

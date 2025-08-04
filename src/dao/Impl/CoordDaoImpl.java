@@ -34,13 +34,18 @@ public class CoordDaoImpl implements CoordDao {
 
 	@Override
 	public int insertCoord(Coord coord) throws SQLException {
-		String sql = " insert into Map.region_coord (seq_region_coord.nextVal, lat, log, region_id) "
-				+ " values(seq_region_coord.nextVal, ?, ?, ?) ";
+		String sql = " insert into Map.region_coord (coordId, lat, log, regionId, gu_name) "
+				+ " values(MAP.seq_region_coord.nextVal, ?, ?, ?, ?) ";
 		pstmt = conn.prepareStatement(sql);
 		pstmt.setDouble(1, coord.getLat());
 		pstmt.setDouble(2, coord.getLog());
-		pstmt.setString(3, coord.getRegionId());
-		return pstmt.executeUpdate();
+		System.out.println(coord.getRegionId());
+		pstmt.setInt(3, coord.getRegionId());
+		pstmt.setString(4, coord.getGu_name());
+		int result = pstmt.executeUpdate();
+		pstmt.close();
+//		conn.commit();
+		return result;
 	}
 
 	@Override
