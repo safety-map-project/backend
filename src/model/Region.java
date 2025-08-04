@@ -7,8 +7,8 @@ public class Region implements Serializable {
 	private static final long serialVersionUID = 562655665565263263L;
 
 	private String regionId; // 지역아이디
-	private String si; // 광역시
 	private String gu; // 구
+	private String si; // 광역시
 //	private int startIat; // 시작위도
 //	private int startLog; // 시작경도
 //	private int endLat; // 끝위도

@@ -23,7 +23,7 @@ public class Coord implements Serializable{
 		this.gu_name = gu_name;
 	}
 
-	Coord() {}
+	public Coord() {}
 	
 
 	public int getCoordId() {

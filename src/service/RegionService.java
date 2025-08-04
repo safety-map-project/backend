@@ -9,7 +9,7 @@ public interface RegionService {
 
 	public abstract List<Region> listRegion() throws SQLException;
 
-	public abstract Region getRegion(String regionId) throws SQLException;
+	public abstract Region getRegion(String gu_name) throws SQLException;
 
 	public abstract int insertRegion(Region region) throws SQLException;
 
