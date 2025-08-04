@@ -16,7 +16,6 @@ import service.RegionService;
 import service.Impl.CrimeServiceImpl;
 import service.Impl.RegionServiceImpl;
 import util.APIUtil.CrimeAPI;
-import util.APIUtil.SiAPI;
 
 public class CrimeServiceTest {
 
