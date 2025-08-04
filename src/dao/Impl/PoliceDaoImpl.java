@@ -58,8 +58,8 @@ public class PoliceDaoImpl implements PoliceDao {
 			Police police = new Police();
 			police.setPoliceId(rs.getInt("policeid"));
 			police.setLocation(rs.getString("location"));
-			police.setLat(rs.getInt("lat"));
-			police.setLog(rs.getInt("log"));
+			police.setLat(rs.getDouble("lat"));
+			police.setLog(rs.getDouble("log"));
 			police.setRegionId(rs.getInt("regionId"));
 			police.setName(rs.getString("name"));
 			policeList.add(police);

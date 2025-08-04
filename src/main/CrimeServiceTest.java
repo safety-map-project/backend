@@ -15,8 +15,10 @@ import com.google.gson.GsonBuilder;
 import model.Crime;
 import model.Region;
 import service.CrimeService;
+import service.PoliceService;
 import service.RegionService;
 import service.Impl.CrimeServiceImpl;
+import service.Impl.PoliceServiceImpl;
 import service.Impl.RegionServiceImpl;
 import util.APIUtil.CrimeAPI;
 
@@ -59,6 +61,9 @@ public class CrimeServiceTest {
 //							29155, crime.getRegion())
 //				);
 //			}
+			
+			PoliceService policeService = new PoliceServiceImpl();
+			policeService.listPolice().forEach(System.out::println);
 			
 		} catch (Exception e) {
 			e.printStackTrace();
