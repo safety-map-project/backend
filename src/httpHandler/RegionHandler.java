@@ -22,19 +22,26 @@ public class RegionHandler implements HttpHandler {
     @Override
     public void handle(HttpExchange exchange) throws IOException {
         
+    	HandlerUtil.optionsEquals(exchange);
+    	
     	Gson gson = new GsonBuilder().setPrettyPrinting().create();
         CoordService coordService = new CoordServiceImpl();
         
         try {
         	
-        	String guName = exchange.getRequestURI().getQuery().trim();
+        	String query = exchange.getRequestURI().getQuery();
+        	int siIdx = query.indexOf("시");
+        	String guName = query.substring(siIdx+1).trim();
         	List<Coord> coordList = coordService.guCoordsList(guName);
         	
-        	List<List<Coord>> coordPair = new ArrayList<List<Coord>>();
+        	List<double[]> coordPair = new ArrayList<double[]>();
         	
         	for(Coord coords : coordList) {
-        		coordPair.add()
+        		coordPair.add(makeCoordPairArr(coords.getLat(), coords.getLog()));
         	}
+        	
+        	String json = gson.toJson(coordPair);
+        	HandlerUtil.sendResponse(exchange, json);
         	
         	
         } catch(SQLException sqle) {
@@ -42,6 +49,13 @@ public class RegionHandler implements HttpHandler {
         }
     
     }
+    
+    public double[] makeCoordPairArr(double lat, double log) {
+    	double[] onePair = {lat, log};
+    	return onePair;
+    }
+    
+   
 }
     
 
