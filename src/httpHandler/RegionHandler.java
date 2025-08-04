@@ -2,6 +2,7 @@ package httpHandler;
 
 import java.io.IOException;
 import java.sql.SQLException;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -28,14 +29,13 @@ public class RegionHandler implements HttpHandler {
         	
         	String guName = exchange.getRequestURI().getQuery().trim();
         	List<Coord> coordList = coordService.guCoordsList(guName);
-        	Map<Double, Double> coordPairMap = new HashMap<Double, Double>();
         	
-        	for(Coord coord : coordList) {
-        		coordPairMap.put(coord.getLat(), coord.getLog());
+        	List<List<Coord>> coordPair = new ArrayList<List<Coord>>();
+        	
+        	for(Coord coords : coordList) {
+        		coordPair.add()
         	}
         	
-        	String json = gson.toJson(coordPairMap);
-        	HandlerUtil.sendResponse(exchange, json);
         	
         } catch(SQLException sqle) {
         	sqle.printStackTrace();
