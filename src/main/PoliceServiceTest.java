@@ -1,28 +1,36 @@
 package main;
 
 import java.io.IOException;
-import java.sql.SQLException;
+import java.util.List;
 
+import model.Police;
 import util.APIUtil.PoliceAPI;
 
 public class PoliceServiceTest {
 
 	public static void main(String[] args) {
 
-		PoliceAPI policeAPI = new PoliceAPI();
+		PoliceAPI api = new PoliceAPI();
 
 		try {
-			policeAPI.getPoliceAPI();
+			String jsonStr = api.getPoliceAPI();
+			// 객체들을 넣은 리스트 받아옴
+			List<Police> policeList = api.insertPoliceList(jsonStr);
+
+			long count = policeList.stream().count();
+			System.out.println("데이터 개수 : " + count);
+
+			policeList.stream().forEach(element -> {
+				System.out.println("파출소명 : " + element.getPolice_address());
+				System.out.println("주소 : " + element.getLocation());
+			});
+
 		} catch (IOException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
-		} catch (InterruptedException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		} catch (SQLException e) {
-			// TODO Auto-generated catch block
+		} catch (Exception e) {
 			e.printStackTrace();
 		}
+
 	}
 
 }

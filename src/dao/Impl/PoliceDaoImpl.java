@@ -5,9 +5,7 @@ import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
 import dao.PoliceDao;
 import model.Police;
@@ -35,35 +33,15 @@ public class PoliceDaoImpl implements PoliceDao {
 	}
 
 	@Override
-		public int insertPolice(Police police) throws IOException, InterruptedException, SQLException {
-			PoliceAPI api = new PoliceAPI();
-	
-			// JSON 문자열 받아오기
-			String jsonStr = api.getPoliceAPI();
-	
-			// JSON → Police 객체 리스트
-			List<Police> policeList = api.insertPoliceList(jsonStr);
-	
-			// 지역명 기반으로 REGIONID 설정 (if문 방식)
-			for (Police p : policeList) {
-				String location = p.getLocation();
-	
-				if (location.contains("강남구")) {
-					p.setRegionId(1);
-				} else if (location.contains("강서구")) {
-					p.setRegionId(2);
-				} else if (location.contains("중구")) {
-					p.setRegionId(3);
-				} else if (location.contains("송파구")) {
-					p.setRegionId(4);
-				} else if (location.contains("노원구")) {
-					p.setRegionId(5);
-				} else if (location.contains("성동구")) {
-					p.setRegionId(6);
-				} else {
-					System.out.println("지역명 매칭 실패: " + location);
-			}
-		}
+	public int insertPolice(Police police) throws IOException, InterruptedException, SQLException {
+		PoliceAPI api = new PoliceAPI();
+
+		// JSON 문자열 받아오기
+		String jsonStr = api.getPoliceAPI();
+
+		// 관서명+구분, 주소를 받아온 리스트를 초기화
+		// Police 객체 리스트
+		List<Police> policeList = api.insertPoliceList(jsonStr);
 
 		// DB 연결
 		if (conn != null) {

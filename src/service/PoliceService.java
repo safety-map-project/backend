@@ -1,5 +1,6 @@
 package service;
 
+import java.io.IOException;
 import java.sql.SQLException;
 import java.util.List;
 
@@ -11,7 +12,7 @@ public interface PoliceService {
 
 	public abstract Police getPolice(int policeId) throws SQLException;
 
-	public abstract int insertPolice(Police police) throws SQLException;
+	public abstract int insertPolice(Police police) throws SQLException, IOException, InterruptedException;
 
 	public abstract int updatePolice(Police police) throws SQLException;
 

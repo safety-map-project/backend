@@ -34,30 +34,37 @@ public class PoliceAPI {
 		HttpResponse response = client.send(request, BodyHandlers.ofString());
 		String jsonStr = (String) response.body();
 
-		return jsonStr;
+		return jsonStr; // josn 문자열 반환
 	}
 
-	// JSON 데이터 파싱 후에 리스트에 넣는 메서드
+	// json 문자열을 인자로 받아서 리스트에 넣는 메서드
 	public List<Police> insertPoliceList(String jsonStr) {
 		List<Police> policeList = new ArrayList<>();
 		Gson gson = new Gson();
 		JsonObject jsonObject = gson.fromJson(jsonStr, JsonObject.class);
 		JsonArray jsonArray = jsonObject.getAsJsonArray("data");
 
-		for (JsonElement elem : jsonArray) {
-			JsonObject dataObject = elem.getAsJsonObject();
+		for (JsonElement element : jsonArray) {
+			JsonObject dataObject = element.getAsJsonObject();
 
+			// 관서명 + 구분
 			String policeAddress = dataObject.get("관서명").getAsString() + " " + dataObject.get("구분").getAsString();
 
+			// 풀 주소
 			String fullLocation = dataObject.get("주소").getAsString();
 
-			int idx = fullLocation.indexOf("구");
+			// 서울시 강남구 인덱스 값 추출
+			int siIdx = fullLocation.indexOf(" ");
+			int guIdx = fullLocation.indexOf(" ", siIdx + 1);
 
-			String sigu = (idx != -1) ? fullLocation.substring(0, idx + 1) : fullLocation;
+			// 서울시 + 강남구 추출
+			String si = fullLocation.substring(0, siIdx);
+			String gu = fullLocation.substring(siIdx + 1, guIdx);
+			String sigu = si + " " + gu;
 
 			Police police = new Police();
-			police.setPolice_address(policeAddress);
-			police.setLocation(sigu);
+			police.setPolice_address(policeAddress); // 관서 + 구분
+			police.setLocation(sigu); // 시 + 구
 			policeList.add(police);
 		}
 
