@@ -39,9 +39,11 @@ public class CoordAPI {
 				.getAsString()
 				.trim();
 				
-				if(!gu_name.endsWith("구")) {
+				if(gu_name.endsWith("시")) {
 					continue;
-				}
+				} else if(gu_name.endsWith("구")&&gu_name.contains("시")) {
+					continue;
+				} 
 				
 //				지역코드
 				int regionId 
@@ -58,7 +60,7 @@ public class CoordAPI {
 //				System.out.println(coordinates.size());
 				
 				JsonArray outerRing = coordinates.get(0).getAsJsonArray();
-				System.out.println(outerRing.size());
+//				System.out.println(outerRing.size());
 				
 				for(JsonElement points : outerRing) {
 					JsonArray coord = points.getAsJsonArray();

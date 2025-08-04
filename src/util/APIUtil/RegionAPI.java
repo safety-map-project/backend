@@ -46,33 +46,52 @@ public class RegionAPI {
 				String sig_kor_nm = properties.get("SIG_KOR_NM").getAsString();
 				
 				String gu = sig_kor_nm;
-//				if(gu.contains("시")) {
-//					int idx = sig_kor_nm.indexOf("시");
-//					gu = sig_kor_nm.substring(0, idx+1).trim(); // 시까지 자름
-//				} else {
-//					gu = sig_kor_nm.trim();
-//				}
+				String si = null;
 				
-//				properties 객체에서 지역아이디랑 구만 꺼내서 생성자에 넣는다.
-				if(gu.endsWith("구")) {
-					Region region = new Region(regionId, gu);
+				if(gu.endsWith("시")) { 
+					continue;
+//					
+				} else if(gu.contains("시") && gu.endsWith("구")) { // ex.수원시 장안구
+					int idx = sig_kor_nm.indexOf("시");
+					si = sig_kor_nm.substring(0, idx+1).trim();
+					gu = sig_kor_nm.substring(idx+1).trim();
+					
+					Region region = new Region(regionId, gu, si);
 					regionList.add(region);
-				} 
+					
+				} else { // ex. OO구
+					gu = sig_kor_nm.trim();
+				}
+				
 			}
 			
-			} catch (FileNotFoundException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
-			} catch (IOException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
-			}
+		} catch (FileNotFoundException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
 			return regionList;
 			
 	} // makeRegionList
 	
+	public static String verifyRegionId(int regionId) {
+		switch(Integer.toString(regionId).substring(0, 2)) {
+			case "11" : return "서울특별시";
+			case "28" : return "인천광역시";
+			case "31" : return "울산광역시";
+			case "30" : return "대전광역시";
+			case "29" : return "광주광역시";
+			case "27" : return "대구광역시";
+			case "26" : return "부산광역시";
+			default: return "광역시 아님!";
+			
+		}
+	}
+	
 	public static void main(String[] args) {
-		System.out.println(makeRegionList());
+//		System.out.println(makeRegionList());
 	}
 	
 } // class
