@@ -55,8 +55,10 @@ public class CoordAPI {
 					= featureObj
 					.getAsJsonObject("geometry")
 					.getAsJsonArray("coordinates");
+//				System.out.println(coordinates.size());
 				
 				JsonArray outerRing = coordinates.get(0).getAsJsonArray();
+				System.out.println(outerRing.size());
 				
 				for(JsonElement points : outerRing) {
 					JsonArray coord = points.getAsJsonArray();
@@ -64,6 +66,8 @@ public class CoordAPI {
 					double log = coord.get(0).getAsDouble();
 					coordList.add(new Coord(0, lat, log, regionId));
 				}
+//				System.out.println("coordList size : "+coordList.size());
+//				coordList.stream().forEach(System.out::println);
 			
 			}
 			
@@ -84,8 +88,8 @@ public class CoordAPI {
 		List<Coord> cList = makeCoordList();
 //		System.out.println("총 Coord 개수: " + cList.size());
 
-		cList.stream().limit(10).forEach(System.out::println);
-		
+//		cList.stream().limit(10).forEach(System.out::println);
+//
 	}
 	
 }
