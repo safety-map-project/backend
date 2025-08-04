@@ -7,7 +7,7 @@ public final class OracleConstant {
 
 	public static final String JDBC_URL = "jdbc:oracle:thin:@192.168.8.7:1521:xe";
 
-	public static final String USERNAME = "MAP";
-	public static final String PASSWORD = "MAP";
+	public static final String USERNAME = "USER3";
+	public static final String PASSWORD = "USER3";
 
 }

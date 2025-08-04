@@ -18,4 +18,6 @@ public interface PoliceDao {
 
 	public abstract int deletePolice(int policeId) throws SQLException;
 
+	int insertPolice(List<Police> policeList) throws IOException, InterruptedException, SQLException;
+
 }
