@@ -10,7 +10,6 @@ import java.util.List;
 import dao.RegionDao;
 import model.Region;
 import util.ConnectionUtil;
-import util.APIUtil.SiAPI;
 
 public class RegionDaoImpl implements RegionDao {
 
