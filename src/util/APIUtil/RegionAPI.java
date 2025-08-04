@@ -46,12 +46,12 @@ public class RegionAPI {
 				String sig_kor_nm = properties.get("SIG_KOR_NM").getAsString();
 				
 				String gu = sig_kor_nm;
-				if(gu.contains("시")) {
-					int idx = sig_kor_nm.indexOf("시");
-					gu = sig_kor_nm.substring(0, idx+1).trim(); // 시까지 자름
-				} else {
-					gu = sig_kor_nm.trim();
-				}
+//				if(gu.contains("시")) {
+//					int idx = sig_kor_nm.indexOf("시");
+//					gu = sig_kor_nm.substring(0, idx+1).trim(); // 시까지 자름
+//				} else {
+//					gu = sig_kor_nm.trim();
+//				}
 				
 //				properties 객체에서 지역아이디랑 구만 꺼내서 생성자에 넣는다.
 				if(gu.endsWith("구")) {
@@ -60,17 +60,19 @@ public class RegionAPI {
 				} 
 			}
 			
-		}catch (FileNotFoundException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		} catch (IOException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
-		return regionList;
+			} catch (FileNotFoundException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			} catch (IOException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+			return regionList;
 			
-			
-			
+	} // makeRegionList
+	
+	public static void main(String[] args) {
+		System.out.println(makeRegionList());
 	}
 	
 } // class
