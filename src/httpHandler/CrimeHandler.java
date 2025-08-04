@@ -27,30 +27,25 @@ public class CrimeHandler implements HttpHandler {
 
 		CrimeService crimeService = new CrimeServiceImpl();
 
-		String json = null;
-
-		List<Crime> crimeList = new ArrayList<Crime>();
-		
 		try {
 			
-			for (Crime crime : crimeService.listCrime()) {
-				
-				crimeList.add(
-					new Crime(crime.getCrimeId(), crime.getCrimeYear(), crime.getCrimeType(), 
+			List<Crime> jsonCirmeList = new ArrayList<Crime>();
+			for(Crime crime : crimeService.listCrime()) {
+				jsonCirmeList.add(
+					new Crime(crime.getCrimeId(), crime.getCrimeYear(), crime.getCrimeType(),
 							crime.getCrimeCount(), crime.getRegionId(), crime.getRegion())
 				);
-				
 			}
-
-			ObjectMapper mapper = new ObjectMapper();
-			json = mapper.writeValueAsString(crimeList);
+			Gson gson = new GsonBuilder().setPrettyPrinting().create();
+			String json = gson.toJson(jsonCirmeList);
 		
+			// json 보내는 메서드
+			HandlerUtil.sendResponse(exchange, json);
+
 		} catch (SQLException sqle) {
 			sqle.printStackTrace();
 		}
 
-		// json 보내는 메서드
-		HandlerUtil.sendResponse(exchange, json);
 
 	}
 
