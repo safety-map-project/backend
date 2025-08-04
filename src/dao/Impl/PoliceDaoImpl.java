@@ -1,16 +1,15 @@
 package dao.Impl;
 
-import java.io.IOException;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.util.ArrayList;
 import java.util.List;
 
 import dao.PoliceDao;
 import model.Police;
 import util.ConnectionUtil;
-import util.APIUtil.PoliceAPI;
 
 public class PoliceDaoImpl implements PoliceDao {
 
@@ -23,79 +22,54 @@ public class PoliceDaoImpl implements PoliceDao {
 	}
 
 	@Override
+	public int insertPolice(List<Police> policeList) throws SQLException {
+		String sql = "INSERT INTO MAP.POLICE (POLICEID, LOCATION, LAT, LOG, REGIONID, NAME) VALUES (MAP.SEQ_POLICE.NEXTVAL, ?, ?, ?, ?, ?)";
+		int successCount = 0;
+
+		try (PreparedStatement pstmt = conn.prepareStatement(sql)) {
+			for (Police p : policeList) {
+				try {
+					pstmt.setString(1, p.getLocation());
+					pstmt.setDouble(2, p.getLat());
+					pstmt.setDouble(3, p.getLog());
+					pstmt.setInt(4, p.getRegionId());
+					pstmt.setString(5, p.getPolice_address());
+
+					int result = pstmt.executeUpdate();
+					if (result == 1) {
+						successCount++;
+					}
+				} catch (SQLException e) {
+					e.printStackTrace();
+				}
+			}
+		}
+
+		return successCount;
+	}
+
+	@Override
 	public List<Police> listPolice() throws SQLException {
-		return null;
+		String sql = " select policeid, location, lat, log, regionId, name from map.police ";
+		pstmt = conn.prepareStatement(sql);
+		rs = pstmt.executeQuery();
+		List<Police> policeList = new ArrayList<Police>();
+		while(rs.next()) {
+			Police police = new Police();
+			police.setPoliceId(rs.getInt("policeid"));
+			police.setLocation(rs.getString("location"));
+			police.setLat(rs.getInt("lat"));
+			police.setLog(rs.getInt("log"));
+			police.setRegionId(rs.getInt("regionId"));
+			police.setName(rs.getString("name"));
+			policeList.add(police);
+		}
+		return policeList;
 	}
 
 	@Override
 	public Police getPolice(int policeId) throws SQLException {
 		return null;
-	}
-
-	@Override
-	public int insertPolice(Police police) throws IOException, InterruptedException, SQLException {
-		PoliceAPI api = new PoliceAPI();
-
-		// JSON 문자열 받아오기
-		String jsonStr = api.getPoliceAPI();
-
-		// 관서명+구분, 주소를 받아온 리스트를 초기화
-		// Police 객체 리스트
-		List<Police> policeList = api.insertPoliceList(jsonStr);
-
-		// DB 연결
-		if (conn != null) {
-			String insertSQL = "INSERT INTO POLICE (POLICEID, NAME, LOCATION, LAT, LOG, REGIONID) VALUES (SEQ_POLICE.NEXTVAL, ?, ?, ?, ?, ?)";
-			String coordSQL = "SELECT LAT, LOG FROM REGION_COORD WHERE REGIONID = ?";
-
-			PreparedStatement insertStmt = null;
-			PreparedStatement coordStmt = null;
-
-			try {
-				insertStmt = conn.prepareStatement(insertSQL);
-				coordStmt = conn.prepareStatement(coordSQL);
-
-				for (Police p : policeList) {
-					if (p.getRegionId() == 0) {
-						continue;
-					}
-
-					coordStmt.setInt(1, p.getRegionId());
-					ResultSet rs = coordStmt.executeQuery();
-
-					double lat = 0;
-					double log = 0;
-
-					if (rs.next()) {
-						lat = rs.getDouble("LAT");
-						log = rs.getDouble("LOG");
-					} else {
-						System.out.println("REGION_COORD에 REGIONID " + p.getRegionId() + "가 없음. 건너뜀.");
-						continue;
-					}
-
-					insertStmt.setString(1, p.getPolice_address());
-					insertStmt.setString(2, p.getLocation());
-					insertStmt.setDouble(3, lat);
-					insertStmt.setDouble(4, log);
-					insertStmt.setInt(5, p.getRegionId());
-
-					insertStmt.executeUpdate();
-				}
-
-			} finally {
-				if (insertStmt != null)
-					insertStmt.close();
-				if (coordStmt != null)
-					coordStmt.close();
-				conn.close();
-			}
-
-		} else {
-			System.out.println("DB 연결 실패");
-		}
-
-		return 0;
 	}
 
 	@Override
@@ -108,4 +82,8 @@ public class PoliceDaoImpl implements PoliceDao {
 		return 0;
 	}
 
+	@Override
+	public int insertPolice(Police police) throws SQLException {
+		return 0;
+	}
 }

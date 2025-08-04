@@ -12,11 +12,13 @@ public class Police implements Serializable {
 	private int regionId; // 지역아이디
 	private double lat; // 위도
 	private double log; // 경도
+	private String name;
 
 	public Police() {
 	}
 
-	public Police(int policeId, String location, String police_address, int regionId, double lat, double log) {
+	public Police(int policeId, String location, String police_address, int regionId, double lat, double log,
+			String name) {
 		super();
 		this.policeId = policeId;
 		this.location = location;
@@ -24,6 +26,7 @@ public class Police implements Serializable {
 		this.regionId = regionId;
 		this.lat = lat;
 		this.log = log;
+		this.name = name;
 	}
 
 	public String getPolice_address() {
@@ -74,10 +77,18 @@ public class Police implements Serializable {
 		this.log = log;
 	}
 
+	public String getName() {
+		return name;
+	}
+
+	public void setName(String name) {
+		this.name = name;
+	}
+
 	@Override
 	public String toString() {
-		return "Police [policeId=" + policeId + ", location=" + location + ", police_address=" + police_address
-				+ ", regionId=" + regionId + ", lat=" + lat + ", log=" + log + "]";
+		return "{ policeId: " + policeId + ", location: " + location + ", police_address: " + police_address
+				+ ", regionId: " + regionId + ", lat: " + lat + ", log: " + log + ", name: " + name + "}";
 	}
 
 }
