@@ -43,7 +43,9 @@ public class CoordAPI {
 					continue;
 				} else if(gu_name.endsWith("구")&&gu_name.contains("시")) {
 					continue;
-				} 
+				} else if(!gu_name.endsWith("구")) {
+					continue;
+				}
 				
 //				지역코드
 				int regionId 
@@ -87,11 +89,11 @@ public class CoordAPI {
 //		System.out.println(makeCoordList());
 		
 		
-//		List<Coord> cList = makeCoordList();
+		List<Coord> cList = makeCoordList();
 //		System.out.println("총 Coord 개수: " + cList.size());
 //		System.out.println(cList);
 
-//		cList.stream().limit(10).forEach(System.out::println);
+		cList.stream().forEach(System.out::println);
 //
 	}
 	

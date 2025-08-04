@@ -52,9 +52,9 @@ public class CoordDaoImpl implements CoordDao {
 		List<Coord> coordWhereGuName = new ArrayList<Coord>();
 		
 		try(PreparedStatement pstmt = conn.prepareStatement(sql);
-			ResultSet rs = pstmt.executeQuery()
 			) {
 			pstmt.setString(1, gu_name);
+			ResultSet rs = pstmt.executeQuery();
 			while(rs.next()) {
 				Coord coord = new Coord();
 				coord.setCoordId(rs.getInt("coordId"));
