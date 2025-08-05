@@ -5,7 +5,9 @@ import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
@@ -42,6 +44,7 @@ public class RegionHandler implements HttpHandler {
 //        	System.out.println("guname: "+guName);
         	
         	List<Coord> coordList = coordService.guCoordsList(guName);
+        	System.out.println(coordList);
         	
         	List<double[]> coordPairs = new ArrayList<double[]>();
         	
@@ -49,11 +52,16 @@ public class RegionHandler implements HttpHandler {
         		coordPairs.add(makeCoordPairArr(coords.getLat(), coords.getLog()));
         	}
         	
-        	getSortedList(coordPairs); // 중심 좌표와의 각도에 대해 시계 반대 방향으로 정렬
-        	settingStartandEnd(coordPairs); // 시작점과 끝점을 맞춤
+//        	
+        	getSortedList(coordPairs); // 중심 좌표와의 각도에 대해 정렬
+//        	settingStartandEnd(coordPairs); // 시작점과 끝점을 맞춤
         	
-        	String json = gson.toJson(coordPairs);
-        	HandlerUtil.sendResponse(exchange, json);
+        	Map<String, Object> coordsMap = new HashMap<String, Object>();
+        	coordsMap.put("centerCoord", getCenterCoord(coordPairs));
+        	coordsMap.put("coords", coordPairs);
+        	
+        	String jsonResponse = gson.toJson(coordsMap);
+        	HandlerUtil.sendResponse(exchange, jsonResponse);
         	
         	
         } catch(SQLException sqle) {
@@ -68,25 +76,27 @@ public class RegionHandler implements HttpHandler {
     }
     
     
-//  폴리곤의 시작과 끝을 맞춰서 반환하는 메소드
-    public static List<double[]> settingStartandEnd(List<double[]> sortedList) {
-    	
-    	double[] firstCoord = sortedList.get(0);
-		int size = sortedList.size();
-		double[] lastCoord = sortedList.get(size-1);
-		
-    	if(!sortedList.isEmpty()&& 
-    			(firstCoord[0] != lastCoord[0] // 시작점과 끝점이 안 맞을 경우 선이 꼬임!
-    					|| firstCoord[1] != lastCoord[1])
-    	   ) {
-    		sortedList.add(firstCoord); // 다각형의 시작점과 끝점을 맞춤
-    	}
-    	return sortedList;
-    } // settingStartandEnd
+//  폴리곤의 시작점과 끝점을 맞춰서 반환하는 메소드
+//    public static List<double[]> settingStartandEnd(List<double[]> sortedList) {
+//    	
+//    	double[] firstCoord = sortedList.get(0);
+//		int size = sortedList.size();
+//		double[] lastCoord = sortedList.get(size-1);
+//		
+//    	if(!sortedList.isEmpty()&& 
+//    			(firstCoord[0] != lastCoord[0] // 시작점과 끝점이 안 맞을 경우 선이 꼬임!
+//    					|| firstCoord[1] != lastCoord[1])
+//    	   ) {
+//    		sortedList.add(firstCoord); // 다각형의 시작점과 끝점을 맞춤
+//    	}
+//    	return sortedList;
+//    } // settingStartandEnd
 
     
-//  각도 기준 좌표 정렬
+//  각도 기준 좌표 정렬 (이렇게 해야 선이 안 꼬임)
     public static List<double[]> getSortedList(List<double[]> coordPairs) {
+    	
+//    	중심 좌표 구하기
     	double[] centerCoord = getCenterCoord(coordPairs);
     	double centerLat = centerCoord[0];
     	double centerLng = centerCoord[1];
@@ -112,22 +122,22 @@ public class RegionHandler implements HttpHandler {
    	int size = coordPairs.size();
    	double[] centerCoord = new double[2];
    	
-   	double lat = 0;
-   	double lng = 0;
+   	double latSum = 0;
+   	double lngSum = 0;
 
 //   	중심좌표 구하기
    	for(double[] pair : coordPairs) {
-   		lat += pair[0];
-   		lng += pair[1];
+   		latSum += pair[0];
+   		lngSum += pair[1];
    	}
    	
-   	double centerLat = lat/size;
-   	double centerLng = lng/size;
+//  점들의 평균으로 중심점을 구한다.
+   	double centerLat = latSum/size;
+   	double centerLng = lngSum/size;
    	
    	centerCoord[0] = centerLat;
    	centerCoord[1] = centerLng;
    	
-//   	System.out.println(centerCoord.toString());
    	return centerCoord;
    	
    } // getCenterCoord
