@@ -23,10 +23,6 @@ public class CctvAPI {
 	Gson gson = new Gson();
 	
 	public static List<Cctv> save() {
-//		Connection conn;
-//		PreparedStatement st;
-		
-//		conn = ConnectionUtil.getConnectionUtil().getConnection();
 		List<Cctv> cctvList = new ArrayList<Cctv>();	
 		JsonArray cctvs = getCctvArray();
 		
@@ -47,34 +43,34 @@ public class CctvAPI {
 			}else {
 				continue;
 			}
-//			try {
-//				st = conn.prepareStatement(sql);
-//				st.setString(1, location);
-//				st.setString(4, regionId);
-//				st.setDouble(2, lat);
-//				st.setDouble(3, lng);
-//				st.executeUpdate();
-//			}catch (SQLException sqle){
-//				sqle.printStackTrace();
-//			}
 		}
 		
 		return cctvList;
 	}
 	
 	public static JsonArray getCctvArray() {
-		File file = null;
+		
 		Reader reader = null;
-		JsonArray cctvs = null;
+		JsonArray cctvs = new JsonArray();
 		
 		try {
-			file = new File("C:\\Users\\Administrator\\Documents\\middle\\CCTV\\daegu.json");
-			reader = new FileReader(file);
+			String[] files = {
+					"C:\\Users\\Administrator\\Documents\\middle\\CCTV\\daegu.json",
+					"C:\\Users\\Administrator\\Documents\\middle\\CCTV\\busan.json",
+					"C:\\Users\\Administrator\\Documents\\middle\\CCTV\\daegu.json",
+					"C:\\Users\\Administrator\\Documents\\middle\\CCTV\\incheon.json",
+					"C:\\Users\\Administrator\\Documents\\middle\\CCTV\\gwangju.json",
+					"C:\\Users\\Administrator\\Documents\\middle\\CCTV\\daejeon.json",
+					"C:\\Users\\Administrator\\Documents\\middle\\CCTV\\ulsan.json"
+					};
 			
+			for (String filepath : files) {
+				File file = new File(filepath);
 			
-			cctvs = JsonParser.parseReader(reader).getAsJsonArray();
-//			System.out.println(cctvs);
-//			JsonArray cctvs = obj.getAsJsonArray();
+				reader = new FileReader(file);
+				
+				cctvs.add(JsonParser.parseReader(reader).getAsJsonArray());				
+			};
 		}catch (IOException ioe){
 			ioe.printStackTrace();
 		}finally {
