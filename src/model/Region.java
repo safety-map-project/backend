@@ -9,10 +9,6 @@ public class Region implements Serializable {
 	private String regionId; // 지역아이디
 	private String gu; // 구
 	private String si; // 광역시
-//	private int startIat; // 시작위도
-//	private int startLog; // 시작경도
-//	private int endLat; // 끝위도
-//	private int endLog; // 끝경도
 
 	public Region() {
 	}
