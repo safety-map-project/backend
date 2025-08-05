@@ -29,9 +29,18 @@ public class RegionHandler implements HttpHandler {
         
         try {
         	
-        	String query = exchange.getRequestURI().getQuery();
-        	int siIdx = query.indexOf("시");
-        	String guName = query.substring(siIdx+1).trim();
+        	String query = exchange.getRequestURI().getQuery().trim();
+        	System.out.println(query);
+        	String guName = null;
+        	if(query.contains("시")) {
+            	int siIdx = query.indexOf("시");
+            	guName = query.substring(siIdx+1).trim();
+        	} else {
+        		int eIdx = query.indexOf("=");
+        		guName = query.substring(eIdx+1).trim();
+        	}
+//        	System.out.println("guname: "+guName);
+        	
         	List<Coord> coordList = coordService.guCoordsList(guName);
         	
         	List<double[]> coordPair = new ArrayList<double[]>();
@@ -39,7 +48,7 @@ public class RegionHandler implements HttpHandler {
         	for(Coord coords : coordList) {
         		coordPair.add(makeCoordPairArr(coords.getLat(), coords.getLog()));
         	}
-        	
+//        	
         	String json = gson.toJson(coordPair);
         	HandlerUtil.sendResponse(exchange, json);
         	
