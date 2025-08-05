@@ -52,15 +52,11 @@ public class RegionAPI {
 					continue;
 //					
 				} else if(gu.contains("시") && gu.endsWith("구")) { // ex.수원시 장안구
-					int idx = sig_kor_nm.indexOf("시");
-					si = sig_kor_nm.substring(0, idx+1).trim();
-					gu = sig_kor_nm.substring(idx+1).trim();
-					
-					Region region = new Region(regionId, gu, si);
-					regionList.add(region);
+					continue;
 					
 				} else { // ex. OO구
 					gu = sig_kor_nm.trim();
+					regionList.add(new Region());
 				}
 				
 			}
@@ -89,6 +85,7 @@ public class RegionAPI {
 			
 		}
 	}
+	
 	
 	public static void main(String[] args) {
 //		System.out.println(makeRegionList());
