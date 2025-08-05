@@ -33,12 +33,12 @@ public class CrimeServiceTest {
 
 			// Crime 객체를 crimeList에 담음
 //			List<Crime> crimeList = CrimeAPI.getCrimeList(CrimeAPI.getCrimeAPI());
-//			// map String, String hashMap 객체 생성
+////			// map String, String hashMap 객체 생성
 //			Map<String, String> regionMap = new HashMap();
-//			// regionService listRegion() 호출해 region 객체를 담는 list에 담음
+////			// regionService listRegion() 호출해 region 객체를 담는 list에 담음
 //			List<Region> regionList = regionService.listRegion();
-//			
-//			// for문을 돌려서 region 객체 하나씩 꺼냄
+////			
+////			// for문을 돌려서 region 객체 하나씩 꺼냄
 //			for(Region region : regionList) {
 //				// regionMap에 키,값으로 regionId, gu, si를 put함
 //				regionMap.put(region.getRegionId(), region.getSi() + " " + region.getGu());
