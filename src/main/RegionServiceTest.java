@@ -3,7 +3,6 @@ package main;
 import java.sql.SQLException;
 import java.util.List;
 
-import dao.Impl.RegionDaoImpl;
 import model.Region;
 import service.RegionService;
 import service.Impl.RegionServiceImpl;
@@ -17,11 +16,8 @@ public class RegionServiceTest {
 		try {
 			regionService.listRegion().stream().forEach(System.out::println);
 			List<Region> regionList = RegionAPI.makeRegionList();
+			 
 			
-			for(Region region : regionList) {
-				regionService.insertRegion(region);
-			}
-			System.out.println("등록 완료");
 			
 		} catch (SQLException e) {
 			// TODO Auto-generated catch block

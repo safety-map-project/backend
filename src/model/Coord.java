@@ -23,7 +23,7 @@ public class Coord implements Serializable{
 		this.gu_name = gu_name;
 	}
 
-	Coord() {}
+	public Coord() {}
 	
 
 	public int getCoordId() {
@@ -75,12 +75,13 @@ public class Coord implements Serializable{
 		this.gu_name = gu_name;
 	}
 
-
 	@Override
 	public String toString() {
-		return "Coord [coordId=" + coordId + ", lat=" + lat + ", log=" + log + ", regionId=" + regionId + ", gu_name="
-				+ gu_name + "]";
+		return "[" + lat + ", " + log + "]";
 	}
+
+
+	
 	
 	
 } // class

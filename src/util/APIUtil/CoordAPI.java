@@ -39,7 +39,11 @@ public class CoordAPI {
 				.getAsString()
 				.trim();
 				
-				if(!gu_name.endsWith("구")) {
+				if(gu_name.endsWith("시")) {
+					continue;
+				} else if(gu_name.endsWith("구")&&gu_name.contains("시")) {
+					continue;
+				} else if(!gu_name.endsWith("구")) {
 					continue;
 				}
 				
@@ -58,7 +62,7 @@ public class CoordAPI {
 //				System.out.println(coordinates.size());
 				
 				JsonArray outerRing = coordinates.get(0).getAsJsonArray();
-				System.out.println(outerRing.size());
+//				System.out.println(outerRing.size());
 				
 				for(JsonElement points : outerRing) {
 					JsonArray coord = points.getAsJsonArray();
@@ -85,11 +89,11 @@ public class CoordAPI {
 //		System.out.println(makeCoordList());
 		
 		
-//		List<Coord> cList = makeCoordList();
+		List<Coord> cList = makeCoordList();
 //		System.out.println("총 Coord 개수: " + cList.size());
 //		System.out.println(cList);
 
-//		cList.stream().limit(10).forEach(System.out::println);
+		cList.stream().forEach(System.out::println);
 //
 	}
 	

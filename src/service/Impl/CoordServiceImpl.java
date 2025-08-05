@@ -23,6 +23,12 @@ public class CoordServiceImpl implements CoordService {
 	}
 
 	@Override
+	public List<Coord> guCoordsList(String gu_name) throws SQLException {
+		return coordDao.guCoordsList(gu_name);
+	}
+	
+	
+	@Override
 	public Coord getCoord(String coordId) throws SQLException {
 		return coordDao.getCoord(coordId);
 	}
@@ -41,6 +47,8 @@ public class CoordServiceImpl implements CoordService {
 	public int deleteCoord(String coordId) throws SQLException {
 		return coordDao.deleteCoord(coordId);
 	}
+
+	
 
 	
 
