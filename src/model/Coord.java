@@ -9,17 +9,22 @@ public class Coord implements Serializable{
 	private int coordId;
 	private double lat;
 	private double log;
-	private String regionId;
+	private int regionId;
+	private String gu_name;
 	
 	
-	public Coord(int coordId, double lat, double log, String regionId) {
+	
+	public Coord(int coordId, double lat, double log, int regionId, String gu_name) {
 		super();
 		this.coordId = coordId;
 		this.lat = lat;
 		this.log = log;
 		this.regionId = regionId;
+		this.gu_name = gu_name;
 	}
 
+	public Coord() {}
+	
 
 	public int getCoordId() {
 		return coordId;
@@ -51,22 +56,31 @@ public class Coord implements Serializable{
 	}
 
 
-	public String getRegionId() {
+	public int getRegionId() {
 		return regionId;
 	}
 
 
-	public void setRegionId(String regionId) {
+	public void setRegionId(int regionId) {
 		this.regionId = regionId;
 	}
 
 
+	public String getGu_name() {
+		return gu_name;
+	}
+
+
+	public void setGu_name(String gu_name) {
+		this.gu_name = gu_name;
+	}
+
 	@Override
 	public String toString() {
-		return "Coord [coordId=" + coordId + ", lat=" + lat + ", log=" + log + ", regionId=" + regionId + "]";
+		return "[" + lat + ", " + log + "]";
 	}
-	
-	
+
+
 	
 	
 	

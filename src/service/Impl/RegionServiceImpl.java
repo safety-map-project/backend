@@ -22,8 +22,8 @@ public class RegionServiceImpl implements RegionService {
 	}
 
 	@Override
-	public Region getRegion(String regionId) throws SQLException {
-		return regionDao.getRegion(regionId);
+	public Region getRegion(String gu_name) throws SQLException {
+		return regionDao.getRegion(gu_name);
 	}
 
 	@Override

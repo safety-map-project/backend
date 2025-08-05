@@ -9,14 +9,18 @@ import java.util.Map;
 import java.util.Map.Entry;
 import java.util.Set;
 
+import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
+
 import model.Crime;
 import model.Region;
 import service.CrimeService;
+import service.PoliceService;
 import service.RegionService;
 import service.Impl.CrimeServiceImpl;
+import service.Impl.PoliceServiceImpl;
 import service.Impl.RegionServiceImpl;
 import util.APIUtil.CrimeAPI;
-import util.APIUtil.SiAPI;
 
 public class CrimeServiceTest {
 
@@ -28,25 +32,25 @@ public class CrimeServiceTest {
 		try {
 
 			// Crime 객체를 crimeList에 담음
-			List<Crime> crimeList = CrimeAPI.getCrimeList(CrimeAPI.getCrimeAPI());
-			// map String, String hashMap 객체 생성
-			Map<String, String> regionMap = new HashMap();
-			// regionService listRegion() 호출해 region 객체를 담는 list에 담음
-			List<Region> regionList = regionService.listRegion();
-			
-			// for문을 돌려서 region 객체 하나씩 꺼냄
-			for(Region region : regionList) {
-				// regionMap에 키,값으로 regionId, gu, si를 put함
-				regionMap.put(region.getRegionId(), region.getSi() + " " + region.getGu());
-			}
-
-			Set<Map.Entry<String, String>> entrySet = regionMap.entrySet();
-			
-			Iterator<Map.Entry<String, String>> it = entrySet.iterator();
-			while(it.hasNext()) {
-				Map.Entry<String, String> entry = it.next();
-				addRegionIdToCrime(crimeService, entry);
-			}
+//			List<Crime> crimeList = CrimeAPI.getCrimeList(CrimeAPI.getCrimeAPI());
+//			// map String, String hashMap 객체 생성
+//			Map<String, String> regionMap = new HashMap();
+//			// regionService listRegion() 호출해 region 객체를 담는 list에 담음
+//			List<Region> regionList = regionService.listRegion();
+//			
+//			// for문을 돌려서 region 객체 하나씩 꺼냄
+//			for(Region region : regionList) {
+//				// regionMap에 키,값으로 regionId, gu, si를 put함
+//				regionMap.put(region.getRegionId(), region.getSi() + " " + region.getGu());
+//			}
+//
+//			Set<Map.Entry<String, String>> entrySet = regionMap.entrySet();
+//			
+//			Iterator<Map.Entry<String, String>> it = entrySet.iterator();
+//			while(it.hasNext()) {
+//				Map.Entry<String, String> entry = it.next();
+//				addRegionIdToCrime(crimeService, entry);
+//			}
 				
 			// db crime 테이블에 crime데이터 넣음
 			// regionId는 임시로 넣음
@@ -57,6 +61,9 @@ public class CrimeServiceTest {
 //							29155, crime.getRegion())
 //				);
 //			}
+			
+			PoliceService policeService = new PoliceServiceImpl();
+			policeService.listPolice().forEach(System.out::println);
 			
 		} catch (Exception e) {
 			e.printStackTrace();
