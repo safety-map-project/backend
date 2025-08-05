@@ -42,11 +42,10 @@ public class RegionAPI {
 //				그래서 객체로 접근하는 것이다.
 				JsonObject properties = obj.get("properties").getAsJsonObject();
 				
-				String regionId = properties.get("SIG_CD").getAsString();
+				int regionId = properties.get("SIG_CD").getAsInt();
 				String sig_kor_nm = properties.get("SIG_KOR_NM").getAsString();
 				
-				String gu = sig_kor_nm;
-				String si = null;
+				String gu = sig_kor_nm.trim();
 				
 				if(gu.endsWith("시")) { 
 					continue;
@@ -54,10 +53,16 @@ public class RegionAPI {
 				} else if(gu.contains("시") && gu.endsWith("구")) { // ex.수원시 장안구
 					continue;
 					
+				} else if(gu.contains("기장군") || gu.contains("달성군") ||
+						gu.contains("군위군")||gu.contains("강화군")||gu.contains("옹진군")||gu.contains("울주군")) {
+					
+						regionList.add(new Region(regionId, gu, verifyRegionId(regionId)));
+					
 				} else { // ex. OO구
-					gu = sig_kor_nm.trim();
-					regionList.add(new Region());
+					regionList.add(new Region(regionId, gu, verifyRegionId(regionId)));
 				}
+					
+					
 				
 			}
 			
