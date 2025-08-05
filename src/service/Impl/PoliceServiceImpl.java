@@ -11,35 +11,35 @@ import service.PoliceService;
 
 public class PoliceServiceImpl implements PoliceService {
 
-	private PoliceDao policeDao;
+   private PoliceDao policeDao;
 
-	public PoliceServiceImpl() {
-		policeDao = new PoliceDaoImpl();
-	}
+   public PoliceServiceImpl() {
+      policeDao = new PoliceDaoImpl();
+   }
 
-	@Override
-	public List<Police> listPolice() throws SQLException {
-		return policeDao.listPolice();
-	}
+   @Override
+   public List<Police> listPolice() throws SQLException {
+      return policeDao.listPolice();
+   }
 
-	@Override
-	public Police getPolice(int policeId) throws SQLException {
-		return policeDao.getPolice(policeId);
-	}
+   @Override
+   public Police getPolice(int policeId) throws SQLException {
+      return policeDao.getPolice(policeId);
+   }
 
-	@Override
-	public int insertPolice(Police police) throws SQLException, IOException, InterruptedException {
-		return policeDao.insertPolice(police);
-	}
+   @Override
+   public int insertPolice(Police police) throws SQLException, IOException, InterruptedException {
+      return policeDao.insertPolice(police);
+   }
 
-	@Override
-	public int updatePolice(Police police) throws SQLException {
-		return policeDao.updatePolice(police);
-	}
+   @Override
+   public int updatePolice(Police police) throws SQLException {
+      return policeDao.updatePolice(police);
+   }
 
-	@Override
-	public int deletePolice(int policeId) throws SQLException {
-		return policeDao.deletePolice(policeId);
-	}
+   @Override
+   public int deletePolice(int policeId) throws SQLException {
+      return policeDao.deletePolice(policeId);
+   }
 
 }
