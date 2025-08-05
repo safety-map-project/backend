@@ -27,7 +27,7 @@ public class CrimeDaoImpl implements CrimeDao {
 	@Override
 	public List<Crime> listCrime() throws SQLException {
 		String sql = " select crimeId, crimeYear, regionId, crimeType, crimeCount, regionname "
-				+ " from crime order by crimeId ";
+				+ " from map.crime order by crimeId ";
 		pstmt = conn.prepareStatement(sql);
 		rs = pstmt.executeQuery();
 		List<Crime> CrimeList = new ArrayList<Crime>();

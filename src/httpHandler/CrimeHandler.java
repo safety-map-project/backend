@@ -22,7 +22,7 @@ public class CrimeHandler implements HttpHandler {
 
 	@Override
 	public void handle(HttpExchange exchange) throws IOException {
-
+		
 		HandlerUtil.optionsEquals(exchange);
 
 		CrimeService crimeService = new CrimeServiceImpl();
