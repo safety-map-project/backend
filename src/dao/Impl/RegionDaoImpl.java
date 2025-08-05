@@ -29,7 +29,7 @@ public class RegionDaoImpl implements RegionDao {
 		List<Region> regionList = new ArrayList<Region>();
 		while(rs.next()) {
 			Region region = new Region();
-			region.setRegionId(rs.getString("regionid"));
+			region.setRegionId(rs.getInt("regionid"));
 			region.setGu(rs.getString("gu"));
 			region.setSi(rs.getString("si"));
 			regionList.add(region);
@@ -44,10 +44,11 @@ public class RegionDaoImpl implements RegionDao {
 
 	@Override
 	public int insertRegion(Region region) throws SQLException {
-		String sql = " insert into MAP.region (regionid, gu) values(?, ?) ";
+		String sql = " insert into MAP.region (regionid, gu, si) values(?, ?, ?) ";
 		pstmt = conn.prepareStatement(sql);
-		pstmt.setString(1, region.getRegionId());
+		pstmt.setInt(1, region.getRegionId());
 		pstmt.setString(2, region.getGu());
+		pstmt.setString(3, region.getSi());
 		return pstmt.executeUpdate();
 	}
 
@@ -56,8 +57,9 @@ public class RegionDaoImpl implements RegionDao {
 		
 		String sql = " update region set si=? where regionid=? ";
 		pstmt = conn.prepareStatement(sql);
-		pstmt.setString(1, region.getSi());
-		pstmt.setString(2, region.getRegionId());
+		pstmt.setInt(1, region.getRegionId());
+		pstmt.setString(2, region.getGu());
+		pstmt.setString(3, region.getSi());
 		
 		return pstmt.executeUpdate();
 	}
