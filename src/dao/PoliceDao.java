@@ -8,8 +8,6 @@ import model.Police;
 
 public interface PoliceDao {
 
-	public abstract List<Police> listPolice() throws SQLException;
-
 	public abstract Police getPolice(int policeId) throws SQLException;
 
 	public abstract int insertPolice(Police police) throws SQLException, IOException, InterruptedException;
@@ -19,5 +17,7 @@ public interface PoliceDao {
 	public abstract int deletePolice(int policeId) throws SQLException;
 
 	int insertPolice(List<Police> policeList) throws IOException, InterruptedException, SQLException;
+
+	List<Police> listPolice() throws SQLException;
 
 }
