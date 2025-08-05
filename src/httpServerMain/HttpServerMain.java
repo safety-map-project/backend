@@ -11,6 +11,7 @@ import httpHandler.TestHandler;
 import httpHandler.TestHandler2;
 import httpHandler.PoliceHandler;
 import httpHandler.RegionHandler;
+import httpHandler.RegionSiGuHandler;
 
 public class HttpServerMain {
 	
@@ -28,6 +29,7 @@ public class HttpServerMain {
 			httpServer.createContext("/api/police", new PoliceHandler());
 			httpServer.createContext("/api/crime", new CrimeHandler());
 			httpServer.createContext("/api/region", new RegionHandler());
+			httpServer.createContext("/api/region/sigu", new RegionSiGuHandler());
 			httpServer.createContext("/test", new TestHandler());
 			httpServer.createContext("/test2", new TestHandler2());
 			
