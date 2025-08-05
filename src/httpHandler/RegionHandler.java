@@ -3,9 +3,9 @@ package httpHandler;
 import java.io.IOException;
 import java.sql.SQLException;
 import java.util.ArrayList;
-import java.util.HashMap;
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.List;
-import java.util.Map;
 
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
@@ -43,16 +43,16 @@ public class RegionHandler implements HttpHandler {
         	
         	List<Coord> coordList = coordService.guCoordsList(guName);
         	
-        	List<double[]> coordPair = new ArrayList<double[]>();
+        	List<double[]> coordPairs = new ArrayList<double[]>();
         	
         	for(Coord coords : coordList) {
-        		coordPair.add(makeCoordPairArr(coords.getLat(), coords.getLog()));
+        		coordPairs.add(makeCoordPairArr(coords.getLat(), coords.getLog()));
         	}
         	
-        	settingStartandEnd(coordPair);
+        	getSortedList(coordPairs); // 중심 좌표와의 각도에 대해 시계 반대 방향으로 정렬
+        	settingStartandEnd(coordPairs); // 시작점과 끝점을 맞춤
         	
-        	
-        	String json = gson.toJson(coordPair);
+        	String json = gson.toJson(coordPairs);
         	HandlerUtil.sendResponse(exchange, json);
         	
         	
@@ -67,25 +67,6 @@ public class RegionHandler implements HttpHandler {
     	return onePair;
     }
     
-//  좌표들을 반시계방향으로 정렬 method (이렇게 해야 polygon 선이 안 꼬임)
-    public static double[] sortCoordList(List<double[]>coordPair) {
-    	
-    	double[] centerCoord = getCenterCoord(coordPair);
-    	double centerLat = centerCoord[0];
-    	double centerLng = centerCoord[1];
-    	
-    	for(double[] pair : coordPair) {
-    		double lat = pair[0];
-    		double lng = pair[1];
-
-//    		중심 좌표에 대한 각도 구하기
-    		double angle = Math.atan2(lat-centerLat, lng-centerLng);
-    		
-//    		각도를 기준으로 정렬
-    		
-    	}
-    	
-    }
     
 //  폴리곤의 시작과 끝을 맞춰서 반환하는 메소드
     public static List<double[]> settingStartandEnd(List<double[]> sortedList) {
@@ -102,32 +83,54 @@ public class RegionHandler implements HttpHandler {
     	}
     	return sortedList;
     } // settingStartandEnd
-    
-//   중심좌표 구하는 메소드
-    public static double[] getCenterCoord(List<double[]> coordPair) {
-//    	
-    	int size = coordPair.size();
-    	double[] centerCoord = null;
-    	
-    	double lat = 0;
-    	double lng = 0;
 
-//    	중심좌표 구하기
-    	for(double[] pair : coordPair) {
-    		lat += pair[0];
-    		lng += pair[1];
-    	}
+    
+//  각도 기준 좌표 정렬
+    public static List<double[]> getSortedList(List<double[]> coordPairs) {
+    	double[] centerCoord = getCenterCoord(coordPairs);
+    	double centerLat = centerCoord[0];
+    	double centerLng = centerCoord[1];
     	
-    	double centerLat = lat/size;
-    	double centerLng = lng/size;
+//    	경도 기준 오름차순 정렬
+    	Collections.sort(coordPairs, new Comparator<double[]>() {
+
+			@Override
+			public int compare(double[] o1, double[] o2) {
+				return Double.compare(Math.atan2(o1[0]-centerLat, o1[1]-centerLng),
+						Math.atan2(o2[0]-centerLat, o2[1]-centerLng));
+			}
+		});
     	
-    	centerCoord[0] = centerLat;
-    	centerCoord[1] = centerLng;
+    	return coordPairs;
     	
-    	System.out.println(centerCoord.toString());
-    	return centerCoord;
-    	
-    } // getCenterCoord
+    } // getSortedList
+    
+    
+//  중심좌표 구하는 메소드
+   public static double[] getCenterCoord(List<double[]> coordPairs) {
+//   	
+   	int size = coordPairs.size();
+   	double[] centerCoord = new double[2];
+   	
+   	double lat = 0;
+   	double lng = 0;
+
+//   	중심좌표 구하기
+   	for(double[] pair : coordPairs) {
+   		lat += pair[0];
+   		lng += pair[1];
+   	}
+   	
+   	double centerLat = lat/size;
+   	double centerLng = lng/size;
+   	
+   	centerCoord[0] = centerLat;
+   	centerCoord[1] = centerLng;
+   	
+//   	System.out.println(centerCoord.toString());
+   	return centerCoord;
+   	
+   } // getCenterCoord
     
 }
     

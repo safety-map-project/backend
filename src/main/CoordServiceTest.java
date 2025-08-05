@@ -20,6 +20,8 @@ public class CoordServiceTest {
 		try {
 			List<Coord> coordList = CoordAPI.makeCoordList();
 			
+			System.out.println(coordList);
+			
 			for(Coord coord : coordList) {
 				coordService.insertCoord(coord);
 			}
