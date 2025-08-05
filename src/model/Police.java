@@ -7,34 +7,24 @@ public class Police implements Serializable {
 	private static final long serialVersionUID = 5646545165415645L;
 
 	private int policeId; // 파출소아이디
-	private String location; // 위치(주소)
-	private String police_address; // 을지 지구대
+	private String location; // 위치(주소) >> location
 	private int regionId; // 지역아이디
 	private double lat; // 위도
 	private double log; // 경도
-	private String name;
+	private String name; // name
 
 	public Police() {
 	}
 
-	public Police(int policeId, String location, String police_address, int regionId, double lat, double log,
+	public Police(int policeId, String location,int regionId, double lat, double log,
 			String name) {
 		super();
 		this.policeId = policeId;
 		this.location = location;
-		this.police_address = police_address;
 		this.regionId = regionId;
 		this.lat = lat;
 		this.log = log;
 		this.name = name;
-	}
-
-	public String getPolice_address() {
-		return police_address;
-	}
-
-	public void setPolice_address(String police_address) {
-		this.police_address = police_address;
 	}
 
 	public int getPoliceId() {
@@ -87,8 +77,8 @@ public class Police implements Serializable {
 
 	@Override
 	public String toString() {
-		return "{ policeId: " + policeId + ", location: " + location + ", police_address: " + police_address
-				+ ", regionId: " + regionId + ", lat: " + lat + ", log: " + log + ", name: " + name + "}";
+		return "{ policeId: " + policeId + ", location: " + location + ", regionId: " + regionId + ", lat: " + lat
+				+ ", log: " + log + ", name: " + name + "}";
 	}
 
 }

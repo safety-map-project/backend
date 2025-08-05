@@ -1,5 +1,6 @@
 package dao.Impl;
 
+import java.io.IOException;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
@@ -22,49 +23,33 @@ public class PoliceDaoImpl implements PoliceDao {
 	}
 
 	@Override
-	public int insertPolice(List<Police> policeList) throws SQLException {
-		String sql = "INSERT INTO MAP.POLICE (POLICEID, LOCATION, LAT, LOG, REGIONID, NAME) VALUES (MAP.SEQ_POLICE.NEXTVAL, ?, ?, ?, ?, ?)";
-		int successCount = 0;
+	public int insertPolice(List<Police> policeList) throws IOException, InterruptedException, SQLException {
+		String insertSQL = "INSERT INTO MAP.POLICE(POLICEID, LOCATION, LAT, LOG, REGIONID, NAME) VALUES (MAP.SEQ_POLICE.NEXTVAL, ?, ? , ? , 29110 , ?)";
+		int count = 0;
 
-		try (PreparedStatement pstmt = conn.prepareStatement(sql)) {
-			for (Police p : policeList) {
-				try {
-					pstmt.setString(1, p.getLocation());
-					pstmt.setDouble(2, p.getLat());
-					pstmt.setDouble(3, p.getLog());
-					pstmt.setInt(4, p.getRegionId());
-					pstmt.setString(5, p.getPolice_address());
+		try {
+			pstmt = conn.prepareStatement(insertSQL);
 
-					int result = pstmt.executeUpdate();
-					if (result == 1) {
-						successCount++;
-					}
-				} catch (SQLException e) {
-					e.printStackTrace();
-				}
+			for (Police police : policeList) {
+				pstmt.setString(1, police.getLocation()); // 주소
+				pstmt.setDouble(2, police.getLat()); // 위도
+				pstmt.setDouble(3, police.getLog()); // 경도
+				pstmt.setString(4, police.getName()); // 파출소
+				count += pstmt.executeUpdate();
+
 			}
+
+		} catch (SQLException e) {
+			e.printStackTrace();
+			throw e;
+		} finally {
+			if (pstmt != null)
+				pstmt.close();
+			if (conn != null)
+				conn.close();
 		}
 
-		return successCount;
-	}
-
-	@Override
-	public List<Police> listPolice() throws SQLException {
-		String sql = " select policeid, location, lat, log, regionId, name from map.police ";
-		pstmt = conn.prepareStatement(sql);
-		rs = pstmt.executeQuery();
-		List<Police> policeList = new ArrayList<Police>();
-		while(rs.next()) {
-			Police police = new Police();
-			police.setPoliceId(rs.getInt("policeid"));
-			police.setLocation(rs.getString("location"));
-			police.setLat(rs.getDouble("lat"));
-			police.setLog(rs.getDouble("log"));
-			police.setRegionId(rs.getInt("regionId"));
-			police.setName(rs.getString("name"));
-			policeList.add(police);
-		}
-		return policeList;
+		return count;
 	}
 
 	@Override
@@ -85,5 +70,33 @@ public class PoliceDaoImpl implements PoliceDao {
 	@Override
 	public int insertPolice(Police police) throws SQLException {
 		return 0;
+	}
+
+	@Override
+	public List<Police> listPolice() throws SQLException {
+		String sql = " select policeid, location, lat, log, regionId, name from map.police ";
+
+		pstmt = conn.prepareStatement(sql);
+		rs = pstmt.executeQuery();
+		List<Police> policeList = new ArrayList<Police>();
+
+		try {
+			while (rs.next()) {
+				Police police = new Police();
+				police.setPoliceId(rs.getInt("policeid"));
+				police.setLocation(rs.getString("location"));
+				police.setLat(rs.getDouble("lat"));
+				police.setLog(rs.getDouble("log"));
+				police.setRegionId(rs.getInt("regionId"));
+				police.setName(rs.getString("name"));
+				policeList.add(police);
+			}
+		} catch (Exception e) {
+			e.printStackTrace();
+		} finally {
+			rs.close();
+			pstmt.close();
+		}
+		return policeList;
 	}
 }
