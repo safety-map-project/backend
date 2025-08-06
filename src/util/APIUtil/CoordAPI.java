@@ -61,6 +61,11 @@ public class CoordAPI {
 					.getAsJsonArray("coordinates");
 //				System.out.println(coordinates.size());
 				
+//				부산광역시 강서구가 polygon이 두 개임
+//				if(!coordinates.get(1).isJsonNull()) {
+//					
+//				}
+				
 				JsonArray outerRing = coordinates.get(0).getAsJsonArray();
 //				System.out.println(outerRing.size());
 				

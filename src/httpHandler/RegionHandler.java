@@ -6,8 +6,10 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
@@ -34,31 +36,50 @@ public class RegionHandler implements HttpHandler {
         	String query = exchange.getRequestURI().getQuery().trim();
         	System.out.println(query);
         	String guName = null;
+        	int eIdx = query.indexOf("=");
+        	String siName = null;
+        	
         	if(query.contains("시")) {
             	int siIdx = query.indexOf("시");
             	guName = query.substring(siIdx+1).trim();
+            	siName = query.substring(eIdx+1, siIdx+1).trim();
         	} else {
-        		int eIdx = query.indexOf("=");
         		guName = query.substring(eIdx+1).trim();
         	}
 //        	System.out.println("guname: "+guName);
         	
         	List<Coord> coordList = coordService.guCoordsList(guName);
-        	System.out.println(coordList);
+
+//        	중복 구일 경우
+        	if(isDupGu(coordList)) { // 중복 구를 입력했을 경우 J/S에서는 시 이름과 함께 요청한다.
+//        		쿼리 가져올 때 정의 해놨던 siName을 가져와서 regionId 앞 두 자리를 추출한다.(시 구분하기 위해)
+        		String frontTwoId = filteringRegionIdForSiName(siName);
+        		for(Coord coord : coordList) {
+        			if(Integer.toString(coord.getRegionId())
+        					.substring(0, 2) != frontTwoId) {
+//        				사용자가 선택한 시가 아니면 리스트에서 빼버림
+        				coordList.remove(coord); 
+        			}
+        		}
+        		
+        	} 
         	
+//        	좌표쌍들을 담는 리스트 
         	List<double[]> coordPairs = new ArrayList<double[]>();
         	
         	for(Coord coords : coordList) {
         		coordPairs.add(makeCoordPairArr(coords.getLat(), coords.getLog()));
         	}
         	
-//        	
+
+        	
         	getSortedList(coordPairs); // 중심 좌표와의 각도에 대해 정렬
 //        	settingStartandEnd(coordPairs); // 시작점과 끝점을 맞춤
         	
         	Map<String, Object> coordsMap = new HashMap<String, Object>();
         	coordsMap.put("centerCoord", getCenterCoord(coordPairs));
         	coordsMap.put("coords", coordPairs);
+//        	coordsMap.put("regionId", regionIdSet);
         	
         	String jsonResponse = gson.toJson(coordsMap);
         	HandlerUtil.sendResponse(exchange, jsonResponse);
@@ -75,22 +96,36 @@ public class RegionHandler implements HttpHandler {
     	return onePair;
     }
     
+    public static boolean isDupGu(List<Coord>guList) {
+    	
+//    	사용자가 입력한 구의 regionId를 담은 Set을 만들었다.
+    	Set<Integer> regionIdSet = new HashSet<Integer>();
+    	for(Coord coord : guList) {
+    		regionIdSet.add(coord.getRegionId());
+    	}
+    	
+    	if(regionIdSet.size()>1) { // regionId가 여러 종류일 경우
+    		return true;
+    	} else {
+    		return false;
+    	}
+    	
+    } // isDupGu
     
-//  폴리곤의 시작점과 끝점을 맞춰서 반환하는 메소드
-//    public static List<double[]> settingStartandEnd(List<double[]> sortedList) {
-//    	
-//    	double[] firstCoord = sortedList.get(0);
-//		int size = sortedList.size();
-//		double[] lastCoord = sortedList.get(size-1);
-//		
-//    	if(!sortedList.isEmpty()&& 
-//    			(firstCoord[0] != lastCoord[0] // 시작점과 끝점이 안 맞을 경우 선이 꼬임!
-//    					|| firstCoord[1] != lastCoord[1])
-//    	   ) {
-//    		sortedList.add(firstCoord); // 다각형의 시작점과 끝점을 맞춤
-//    	}
-//    	return sortedList;
-//    } // settingStartandEnd
+//  시 이름에 맞는 regionId 앞 두 자리를 반환하는 메소드
+    public static String filteringRegionIdForSiName(String siName) {
+    	switch (siName) {
+    		case "서울": return Integer.toString(11);
+    		case "인천": return Integer.toString(28);
+    		case "울산": return Integer.toString(31);
+    		case "대전": return Integer.toString(30);
+    		case "광주": return Integer.toString(29);
+    		case "대구": return Integer.toString(27);
+    		case "부산": return Integer.toString(26);
+    		default: return Integer.toString(0);
+    	}
+
+    } // filteringRegionIdForSiName
 
     
 //  각도 기준 좌표 정렬 (이렇게 해야 선이 안 꼬임)
