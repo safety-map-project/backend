@@ -39,71 +39,72 @@ public class RegionHandler implements HttpHandler {
         	int eIdx = query.indexOf("=");
         	String siName = null;
         	
+        	List<Coord> coordList = null;
+        	
         	if(query.contains("시")) {
             	int siIdx = query.indexOf("시");
             	guName = query.substring(siIdx+1).trim();
-            	siName = query.substring(eIdx+1, siIdx+1).trim();
-        	} else {
-        		guName = query.substring(eIdx+1).trim();
+            	siName = query.substring(eIdx+1, siIdx).trim();
+            	
+//            	구 이름에 해당하는 모든 객체를 리스트에 담는다.
+            	coordList = coordService.guCoordsList(guName);
+            	System.out.println(coordList);
+            	
+//              좌표쌍들을 담는 리스트 
+            	List<double[]> coordPairs = new ArrayList<double[]>();
+            	
+            	List<Coord> selectedCoordList = new ArrayList<Coord>();
+            	
+            	if(isDupGu(coordList)) {
+            		String frontTwoId = filteringRegionIdForSiName(siName);
+                	for(Coord coord : coordList) {
+                		if(Integer.toString(coord.getRegionId())
+                				.substring(0, 2).equals(frontTwoId)) {
+                			selectedCoordList.add(coord);
+                		}
+                	}
+//                	System.out.println(selectedCoordList);
+                	
+                	for(Coord coord : selectedCoordList) {
+                		coordPairs.add(makeCoordPairArr(coord.getLat(), coord.getLog()));
+                	}
+//                	System.out.println(coordPairs);
+                	
+            		getSortedList(coordPairs); // 중심 좌표와의 각도에 대해 정렬
+                	
+            		String jsonResponse = gson.toJson(coordPairs);
+                	HandlerUtil.sendResponse(exchange, jsonResponse);
+                	
+                	
+            	} else {
+            		for(Coord coord : coordList) {
+            			coordPairs.add(makeCoordPairArr(coord.getLat(), coord.getLog()));
+            		}
+            		getSortedList(coordPairs);
+            		
+                	String jsonResponse = gson.toJson(coordPairs);
+                	HandlerUtil.sendResponse(exchange, jsonResponse);
+            	}
         	}
-//        	System.out.println("guname: "+guName);
         	
-        	List<Coord> coordList = coordService.guCoordsList(guName);
-
-//        	중복 구일 경우
-        	if(isDupGu(coordList)) { // 중복 구를 입력했을 경우 J/S에서는 시 이름과 함께 요청한다.
-//        		쿼리 가져올 때 정의 해놨던 siName을 가져와서 regionId 앞 두 자리를 추출한다.(시 구분하기 위해)
-        		String frontTwoId = filteringRegionIdForSiName(siName);
-        		for(Coord coord : coordList) {
-        			if(Integer.toString(coord.getRegionId())
-        					.substring(0, 2) != frontTwoId) {
-//        				사용자가 선택한 시가 아니면 리스트에서 빼버림
-        				coordList.remove(coord); 
-        			}
-        		}
-        		
-        	} 
-        	
-//        	좌표쌍들을 담는 리스트 
-        	List<double[]> coordPairs = new ArrayList<double[]>();
-        	
-        	for(Coord coords : coordList) {
-        		coordPairs.add(makeCoordPairArr(coords.getLat(), coords.getLog()));
-        	}
-        	
-
-        	
-        	getSortedList(coordPairs); // 중심 좌표와의 각도에 대해 정렬
-//        	settingStartandEnd(coordPairs); // 시작점과 끝점을 맞춤
-        	
-        	Map<String, Object> coordsMap = new HashMap<String, Object>();
-        	coordsMap.put("centerCoord", getCenterCoord(coordPairs));
-        	coordsMap.put("coords", coordPairs);
-//        	coordsMap.put("regionId", regionIdSet);
-        	
-        	String jsonResponse = gson.toJson(coordsMap);
-        	HandlerUtil.sendResponse(exchange, jsonResponse);
-        	
-        	
-        } catch(SQLException sqle) {
-        	sqle.printStackTrace();
-        }
     
+    } catch(SQLException sqle) {
+    	sqle.printStackTrace();
     }
+} // handle
     
     public static double[] makeCoordPairArr(double lat, double log) {
     	double[] onePair = {lat, log};
     	return onePair;
-    }
+    } // makeCoordPairArr
     
-    public static boolean isDupGu(List<Coord>guList) {
+    public static boolean isDupGu(List<Coord> guList) {
     	
 //    	사용자가 입력한 구의 regionId를 담은 Set을 만들었다.
     	Set<Integer> regionIdSet = new HashSet<Integer>();
     	for(Coord coord : guList) {
     		regionIdSet.add(coord.getRegionId());
     	}
-    	
     	if(regionIdSet.size()>1) { // regionId가 여러 종류일 경우
     		return true;
     	} else {
@@ -178,6 +179,7 @@ public class RegionHandler implements HttpHandler {
    } // getCenterCoord
     
 }
+    
     
 
 	
