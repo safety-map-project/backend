@@ -11,6 +11,8 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
+import org.openqa.selenium.bidi.network.ResponseData;
+
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.sun.net.httpserver.HttpExchange;
@@ -44,7 +46,8 @@ public class RegionHandler implements HttpHandler {
         	if(query.contains("시")) {
             	int siIdx = query.indexOf("시");
             	guName = query.substring(siIdx+1).trim();
-            	siName = query.substring(eIdx+1, siIdx).trim();
+            	siName = query.substring(eIdx+1, siIdx-2).trim();
+            	System.out.println("si" + siName);
             	
 //            	구 이름에 해당하는 모든 객체를 리스트에 담는다.
             	coordList = coordService.guCoordsList(guName);
@@ -57,22 +60,26 @@ public class RegionHandler implements HttpHandler {
             	
             	if(isDupGu(coordList)) {
             		String frontTwoId = filteringRegionIdForSiName(siName);
+            		System.out.println("frontTwoId" + frontTwoId);
                 	for(Coord coord : coordList) {
                 		if(Integer.toString(coord.getRegionId())
                 				.substring(0, 2).equals(frontTwoId)) {
                 			selectedCoordList.add(coord);
                 		}
                 	}
-//                	System.out.println(selectedCoordList);
                 	
                 	for(Coord coord : selectedCoordList) {
                 		coordPairs.add(makeCoordPairArr(coord.getLat(), coord.getLog()));
                 	}
-//                	System.out.println(coordPairs);
                 	
             		getSortedList(coordPairs); // 중심 좌표와의 각도에 대해 정렬
                 	
-            		String jsonResponse = gson.toJson(coordPairs);
+            		Map<String, Object> responsData = new HashMap<String, Object>();
+            		
+            		responsData.put("centerCoords", getCenterCoord(coordPairs));
+            		responsData.put("coords", coordPairs);
+            		
+                	String jsonResponse = gson.toJson(responsData);
                 	HandlerUtil.sendResponse(exchange, jsonResponse);
                 	
                 	
@@ -82,7 +89,12 @@ public class RegionHandler implements HttpHandler {
             		}
             		getSortedList(coordPairs);
             		
-                	String jsonResponse = gson.toJson(coordPairs);
+            		Map<String, Object> responsData = new HashMap<String, Object>();
+            		
+            		responsData.put("centerCoords", getCenterCoord(coordPairs));
+            		responsData.put("coords", coordPairs);
+            		
+                	String jsonResponse = gson.toJson(responsData);
                 	HandlerUtil.sendResponse(exchange, jsonResponse);
             	}
         	}
@@ -127,6 +139,11 @@ public class RegionHandler implements HttpHandler {
     	}
 
     } // filteringRegionIdForSiName
+    
+//    범죄 평균 내서 안전구역/위험구역 구분
+//    public static String separationZone() {
+//    	
+//    }
 
     
 //  각도 기준 좌표 정렬 (이렇게 해야 선이 안 꼬임)
