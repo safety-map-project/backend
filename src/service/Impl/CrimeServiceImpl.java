@@ -6,6 +6,7 @@ import java.util.List;
 import dao.CrimeDao;
 import dao.Impl.CrimeDaoImpl;
 import model.Crime;
+import model.CrimeAvg;
 import service.CrimeService;
 
 public class CrimeServiceImpl implements CrimeService {
@@ -22,8 +23,8 @@ public class CrimeServiceImpl implements CrimeService {
 	}
 
 	@Override
-	public Crime getCrime(int crimeId) throws SQLException {
-		return crimeDao.getCrime(crimeId);
+	public Crime getCrime(int regionId) throws SQLException {
+		return crimeDao.getCrime(regionId);
 	}
 
 	@Override
@@ -41,4 +42,17 @@ public class CrimeServiceImpl implements CrimeService {
 		return crimeDao.deleteCrime(crimeId);
 	}
 
+	@Override
+	public CrimeAvg calculateCrimeAverage(List<Crime> cList) throws SQLException {
+		// TODO Auto-generated method stub
+		return crimeDao.calculateCrimeAverage(cList);
+	}
+
+	@Override
+	public List<Integer> getCrimeCount(int regionId) throws SQLException {
+		return crimeDao.getCrimeCount(regionId);
+	}
+
+	
+	
 }
