@@ -29,7 +29,8 @@ public class CrimeHandler implements HttpHandler {
 
 		try {
 			
-			List<Crime> jsonCirmeList = new ArrayList<Crime>();
+			List<Crime> jsonCirmeList = new ArrayList<
+>();
 			for(Crime crime : crimeService.listCrime()) {
 				jsonCirmeList.add(
 					new Crime(crime.getCrimeId(), crime.getCrimeYear(), crime.getCrimeType(),

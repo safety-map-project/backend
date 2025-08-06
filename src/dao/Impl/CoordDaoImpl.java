@@ -96,8 +96,11 @@ public class CoordDaoImpl implements CoordDao {
 
 	@Override
 	public int insertCoord(Coord coord) throws SQLException {
-		String sql = " insert into Map.region_coord (coordId, lat, log, regionId, gu_name) "
-				+ " values(MAP.seq_region_coord.nextVal, ?, ?, ?, ?) ";
+		
+		System.out.println(coord);
+		
+		String sql = " insert into map.region_coord(coordId, lat, log, regionId, gu_name) "
+				+ " values(map.seq_region_coord.nextval, ?, ?, ?, ?) ";
 		pstmt = conn.prepareStatement(sql);
 		pstmt.setDouble(1, coord.getLat());
 		pstmt.setDouble(2, coord.getLog());
