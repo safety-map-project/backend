@@ -49,9 +49,39 @@ public class CrimeDaoImpl implements CrimeDao {
 	}
 
 	@Override
-	public Crime getCrime(int crimeId) throws SQLException {
+	public Crime getCrime(int regionId) throws SQLException {
+		String sql = " select crimeId, crimeYear, regionId, crimeType, crimeCount, regionname "
+				+ " from map.crime where regionId=? ";
+		pstmt = conn.prepareStatement(sql);
+		pstmt.setInt(1, regionId);
+		rs = pstmt.executeQuery();
+		while (rs.next()) {
+			Crime crime = new Crime();
+			crime.setCrimeId(rs.getInt("crimeId"));
+			crime.setCrimeYear(rs.getInt("crimeYear"));
+			crime.setRegionId(rs.getInt("regionId"));
+			crime.setCrimeType(rs.getString("crimeType"));
+			crime.setCrimeCount(rs.getInt("crimeCount"));
+			crime.setRegion(rs.getString("regionname"));
+			return crime;
+		}
 		return null;
 	}
+	
+	@Override
+	public List<Integer> getCrimeCount(int regionId) throws SQLException {
+		String sql = " select crimeCount from map.crime where regionId=? ";
+		pstmt = conn.prepareStatement(sql);
+		pstmt.setInt(1, regionId);
+		rs = pstmt.executeQuery();
+		List<Integer> crimeCounts = new ArrayList<Integer>();
+		while(rs.next()) {
+			crimeCounts.add(rs.getInt("crimeCount"));
+		}
+		return crimeCounts;
+	}
+	
+	
 
 	@Override
 	public int insertCrime(Crime crime) throws SQLException {
@@ -86,6 +116,8 @@ public class CrimeDaoImpl implements CrimeDao {
 		return 0;
 	}
 
+	
+	
 	// 평균 계산 메서드
 	public CrimeAvg calculateCrimeAverage(List<Crime> cList) {
 		List<Crime> crimeList = cList;
@@ -141,5 +173,9 @@ public class CrimeDaoImpl implements CrimeDao {
 			return 0;
 		}
 	}
+
+	
+
+	
 
 }
