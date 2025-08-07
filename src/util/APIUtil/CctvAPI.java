@@ -3,7 +3,6 @@ package util.APIUtil;
 import java.io.File;
 import java.io.FileReader;
 import java.io.IOException;
-import java.io.Reader;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -34,36 +33,29 @@ public class CctvAPI {
 		}
 		
 		return cctvList;
-	}
+	};
+	
 	
 	public static JsonArray getCctvArray() {
 		
-		Reader reader = null;
 		JsonArray cctvs = null;
+		FileReader reader = null;
+//		String[] files = {
+//				"C:\\Users\\Administrator\\Documents\\middle\\CCTV\\seoul.json",
+//				"C:\\Users\\Administrator\\Documents\\middle\\CCTV\\busan.json",
+//				"C:\\Users\\Administrator\\Documents\\middle\\CCTV\\daegu.json",
+//				"C:\\Users\\Administrator\\Documents\\middle\\CCTV\\incheon.json",
+//				"C:\\Users\\Administrator\\Documents\\middle\\CCTV\\gwangju.json",
+//				"C:\\Users\\Administrator\\Documents\\middle\\CCTV\\daejeon.json",
+//				"C:\\Users\\Administrator\\Documents\\middle\\CCTV\\ulsan.json"
+//		};
 		
 		try {
-			File file = new File("C:\\Users\\Administrator\\Documents\\middle\\CCTV\\ulsan.json");
+			File file = new File("C:\\Users\\Administrator\\Documents\\middle\\CCTV\\seoul.json");
 			
 			reader = new FileReader(file);
 			
 			cctvs = JsonParser.parseReader(reader).getAsJsonArray();
-//			String[] files = {
-//					"C:\\Users\\Administrator\\Documents\\middle\\CCTV\\seoul.json",
-//					"C:\\Users\\Administrator\\Documents\\middle\\CCTV\\busan.json",
-//					"C:\\Users\\Administrator\\Documents\\middle\\CCTV\\daegu.json",
-//					"C:\\Users\\Administrator\\Documents\\middle\\CCTV\\incheon.json",
-//					"C:\\Users\\Administrator\\Documents\\middle\\CCTV\\gwangju.json",
-//					"C:\\Users\\Administrator\\Documents\\middle\\CCTV\\daejeon.json",
-//					"C:\\Users\\Administrator\\Documents\\middle\\CCTV\\ulsan.json"
-//					};
-//			
-//			for (String filepath : files) {
-//				File file = new File(filepath);
-//			
-//				reader = new FileReader(file);
-//				
-//				cctvs.add(JsonParser.parseReader(reader).getAsJsonArray());				
-//			};
 		}catch (IOException ioe){
 			ioe.printStackTrace();
 		}finally {
