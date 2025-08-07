@@ -11,6 +11,8 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
+import org.openqa.selenium.bidi.network.ResponseData;
+
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.sun.net.httpserver.HttpExchange;
@@ -39,27 +41,30 @@ public class RegionHandler implements HttpHandler {
 	        
 	        try {
 	        	
-	        	String query = exchange.getRequestURI().getQuery().trim();
+	        	String query = exchange.getRequestURI().getQuery();
 	        	System.out.println(query);
 	        	String guName = null;
 	        	int eIdx = query.indexOf("=");
 	        	String siName = null;
-	        	List<Coord> coordList = null;
 	        	
 	        	if(query.contains("시")) {
 	            	int siIdx = query.indexOf("시");
 	            	guName = query.substring(siIdx+1).trim();
-	            	siName = query.substring(eIdx+1, siIdx-2).trim();
+	            	siName = query.substring(eIdx+1, siIdx).trim();
 	            	
 	//            	구 이름에 해당하는 모든 객체를 리스트에 담는다.
-	            	coordList = coordService.guCoordsList(guName);
+	            	List<Coord> coordList = coordService.guCoordsList(guName);
 	            	
-	//              좌표쌍들을 담는 리스트 
+	//              최종적으로 프론트에 전달할 좌표쌍들을 담는 리스트 
 	            	List<double[]> coordPairs = new ArrayList<double[]>();
-	            	
+//	            	
+//	            	사용자가 선택한 시에 존재하는 구의 coord 객체만 골라 담을 리스트.
 	            	List<Coord> selectedCoordList = new ArrayList<Coord>();
 	            	
 	            	if(isDupGu(coordList)) { // 중복 구일 경우(중구, 동구, 서구...등등)
+	            		
+	            		
+//	            		시를 구분하기 위해 지역코드 앞 두자리를 구한다.
 	            		String frontTwoId = filteringRegionIdForSiName(siName);
 	                	for(Coord coord : coordList) {
 	                		if(Integer.toString(coord.getRegionId())
@@ -74,30 +79,33 @@ public class RegionHandler implements HttpHandler {
 	                	
 	            		getSortedList(coordPairs); // 중심 좌표와의 각도에 대해 정렬
 	                	
-	            		Map<String, Object> responsData = new HashMap<String, Object>();
+	            		Map<String, Object> responseData = new HashMap<String, Object>();
 	            		
-	            		responsData.put("centerCoords", getCenterCoord(coordPairs));
-	            		responsData.put("coords", coordPairs);
-	            		responsData.put("zone", separationZone(selectedCoordList));
+	            		responseData.put("centerCoords", getCenterCoord(coordPairs));
+	            		responseData.put("coords", coordPairs);
+	            		responseData.put("zone", separationZone(selectedCoordList));
+	            		responseData.put("existRegionTF", thisGuExistInSi(siName, guName, selectedCoordList));
 	            		
-	                	String jsonResponse = gson.toJson(responsData);
+	                	String jsonResponse = gson.toJson(responseData);
 	                	HandlerUtil.sendResponse(exchange, jsonResponse);
 	                	
 	                	
 	            	} else { // 유일한 구일 경우
-	            		coordList = coordService.guCoordsList(guName);
+	            		
+//	            		coordList = coordService.guCoordsList(guName);
 	            		for(Coord coord : coordList) {
 	            			coordPairs.add(makeCoordPairArr(coord.getLat(), coord.getLog()));
 	            		}
 	            		getSortedList(coordPairs);
 	            		
-	            		Map<String, Object> responsData = new HashMap<String, Object>();
+	            		Map<String, Object> responseData = new HashMap<String, Object>();
 	            		
-	            		responsData.put("centerCoords", getCenterCoord(coordPairs));
-	            		responsData.put("coords", coordPairs);
-	            		responsData.put("zone", separationZone(coordList));
+	            		responseData.put("centerCoords", getCenterCoord(coordPairs));
+	            		responseData.put("coords", coordPairs);
+	            		responseData.put("zone", separationZone(coordList));
+	            		responseData.put("existRegionTF", thisGuExistInSi(siName, guName, coordList));
 	            		
-	                	String jsonResponse = gson.toJson(responsData);
+	                	String jsonResponse = gson.toJson(responseData);
 	                	HandlerUtil.sendResponse(exchange, jsonResponse);
 	            	}
 	        	}
@@ -131,6 +139,29 @@ public class RegionHandler implements HttpHandler {
     	
     } // isDupGu
     
+//    사용자가 입력한 시/구의 구가 시에 존재하는 구인지 판단하는 메소드
+    public static boolean thisGuExistInSi(String siName, String guName, List<Coord> cList){
+    	
+//    	사용자가 입력한 구에 대한 coord 객체 리스트
+    	List<Coord> coordList = cList;
+    	
+//		사용자가 입력한 구의 지역코드 앞 두 자리
+		String userRid = filteringRegionIdForSiName(siName);
+		
+    	for(Coord coord : coordList) {
+    		
+//    		cList에서 가져온 regionId
+    		String rid = Integer.toString(coord.getRegionId()).substring(0, 2);
+    	
+    		// 사용자가 입력한 시의 regionId 앞 두 글자와 
+//    		사용자가 입력한 구가 존재하는 시들의 regionId 앞 두글자를 비교해서
+//    		모든 객체에서 찾아본 후 있으면 return true, 없으면 false를 반환
+//    		=> 프론트에 전달(이 값이 false로 보내지면 프론트에서 폴리곤을 띄우지 않는다.)
+    		if(rid.equals(userRid)) return true;
+    	} 
+		return false;
+    } // thisGuExistInSi
+    
 //  시 이름에 맞는 regionId 앞 두 자리를 반환하는 메소드
     public static String filteringRegionIdForSiName(String siName) {
     	switch (siName) {
@@ -150,10 +181,19 @@ public class RegionHandler implements HttpHandler {
     public static String separationZone(List<Coord> coordList) {
     	CrimeService crimeService = new CrimeServiceImpl();
     	try {
+//    		모든 crime 객체를 가져온다
 			List<Crime> allCrimeList = crimeService.listCrime();
+			
+//			coordList에서 아무 객체나 가져온 후 regionId를 뽑는다.
+//			애초에 인자로 받는 coordList는 전부 같은 지역이기 때문에 아무거나 가져와도 상관 없다.
 			int regionId = coordList.get(3).getRegionId(); 
+			
+//			crimeService의 getCrimeCount 메소드를 이용하여 
+//			사용자가 입력한 지역의 범죄 종류 별 범죄 건수를 가져온다. 
 			List<Integer> crimeCounts = crimeService.getCrimeCount(regionId);
-			int regionCrimeCount = 0;
+			int regionCrimeCount = 0; // 범죄 건수 초기화
+			
+//			모든 범죄 건수를 더한다.
 			for(int count : crimeCounts) {
 				regionCrimeCount += count;
 			}
@@ -204,19 +244,19 @@ public class RegionHandler implements HttpHandler {
     } // getSortedList
     
     
-//  중심좌표 구하는 메소드
+//  모든 좌표들의 평균을 구해서 중심 좌표를 구하는 메소드
    public static double[] getCenterCoord(List<double[]> coordPairs) {
 //   	
    	int size = coordPairs.size();
    	double[] centerCoord = new double[2];
    	
-   	double latSum = 0;
-   	double lngSum = 0;
+   	double latSum = 0; // 위도의 합
+   	double lngSum = 0; // 경도의 합
 
 //   	중심좌표 구하기
    	for(double[] pair : coordPairs) {
-   		latSum += pair[0];
-   		lngSum += pair[1];
+   		latSum += pair[0]; // 위도
+   		lngSum += pair[1]; // 경도
    	}
    	
 //  점들의 평균으로 중심점을 구한다.
