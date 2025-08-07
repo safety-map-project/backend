@@ -11,8 +11,6 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
-import org.openqa.selenium.bidi.network.ResponseData;
-
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.sun.net.httpserver.HttpExchange;
@@ -32,10 +30,8 @@ public class RegionHandler implements HttpHandler {
     @Override
     public void handle(HttpExchange exchange) throws IOException {
     	
-    	if (exchange.getRequestMethod().equals("GET") ) {
+    	if (exchange.getRequestMethod().equals("GET")) {
     	
-	    	//HandlerUtil.optionsEquals(exchange);
-	    	
 	    	Gson gson = new GsonBuilder().setPrettyPrinting().create();
 	        CoordService coordService = new CoordServiceImpl();
 	        
@@ -50,7 +46,8 @@ public class RegionHandler implements HttpHandler {
 	        	if(query.contains("시")) {
 	            	int siIdx = query.indexOf("시");
 	            	guName = query.substring(siIdx+1).trim();
-	            	siName = query.substring(eIdx+1, siIdx).trim();
+	            	siName = query.substring(eIdx+1, eIdx+3).trim();
+	            	System.out.println(siName);
 	            	
 	//            	구 이름에 해당하는 모든 객체를 리스트에 담는다.
 	            	List<Coord> coordList = coordService.guCoordsList(guName);
