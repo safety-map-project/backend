@@ -23,26 +23,30 @@ public class CrimeHandler implements HttpHandler {
 	@Override
 	public void handle(HttpExchange exchange) throws IOException {
 
-		HandlerUtil.optionsEquals(exchange);
-
-		CrimeService crimeService = new CrimeServiceImpl();
-
-		try {
-
-			List<Crime> jsonCirmeList = new ArrayList<>();
-			for (Crime crime : crimeService.listCrime()) {
-				jsonCirmeList.add(new Crime(crime.getCrimeId(), crime.getCrimeYear(), crime.getCrimeType(),
-						crime.getCrimeCount(), crime.getRegionId(), crime.getRegion()));
+		if(exchange.getRequestMethod().equals("GET")) {
+			
+			System.out.println(exchange.getRequestURI());
+			
+			CrimeService crimeService = new CrimeServiceImpl();
+			
+			try {
+				
+				List<Crime> jsonCirmeList = new ArrayList<>();
+				for (Crime crime : crimeService.listCrime()) {
+					jsonCirmeList.add(new Crime(crime.getCrimeId(), crime.getCrimeYear(), crime.getCrimeType(),
+							crime.getCrimeCount(), crime.getRegionId(), crime.getRegion()));
+				}
+				Gson gson = new GsonBuilder().setPrettyPrinting().create();
+				String json = gson.toJson(jsonCirmeList);
+				
+				// json 보내는 메서드
+				HandlerUtil.sendResponse(exchange, json);
+				
+			} catch (SQLException sqle) {
+				sqle.printStackTrace();
 			}
-			Gson gson = new GsonBuilder().setPrettyPrinting().create();
-			String json = gson.toJson(jsonCirmeList);
-
-			// json 보내는 메서드
-			HandlerUtil.sendResponse(exchange, json);
-
-		} catch (SQLException sqle) {
-			sqle.printStackTrace();
 		}
+		
 
 	}
 

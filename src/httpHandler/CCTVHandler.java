@@ -14,13 +14,15 @@ public class CCTVHandler implements HttpHandler {
 	@Override
 	public void handle(HttpExchange exchange) throws IOException {
 		
-		String cctvStr = "";
-		HandlerUtil.optionsEquals(exchange);
-		
-		JsonArray cctvs = CctvAPI.getCctvArray();
-		cctvStr = cctvs.toString();
-		
-		HandlerUtil.sendResponse(exchange, cctvStr);
+		if(exchange.getRequestMethod().equals("GET")) {
+			String cctvStr = "";
+			
+			JsonArray cctvs = CctvAPI.getCctvArray();
+			cctvStr = cctvs.toString();
+			
+			HandlerUtil.sendResponse(exchange, cctvStr);
+			
+		}
 	};
 
 }

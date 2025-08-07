@@ -19,29 +19,32 @@ public class PoliceHandler implements HttpHandler {
 
    @Override
    public void handle(HttpExchange exchange) throws IOException {
+	   
+	   if(exchange.getRequestMethod().equals("GET")) {
+		   
+		   System.out.println(exchange.getRequestURI());
+		   
+		   PoliceService policeService = new PoliceServiceImpl();
+		   
+		   try {
+			   List<Police> jsonPolieList = new ArrayList<Police>();
+			   for(Police police : policeService.listPolice()) {
+				   jsonPolieList.add(
+						   new Police(police.getPoliceId(), police.getLocation(),
+								   police.getRegionId(), police.getLat(), police.getLog(), police.getName())
+						   );
+			   }
+			   Gson gson = new GsonBuilder().setPrettyPrinting().create();
+			   String json = gson.toJson(jsonPolieList);
+			   
+			   HandlerUtil.sendResponse(exchange, json);
+			   
+		   } catch (SQLException sqle) {
+			   sqle.printStackTrace();
+		   }
+		   
+	   }
 
-      HandlerUtil.optionsEquals(exchange);
-     
-      
-      PoliceService policeService = new PoliceServiceImpl();
-      
-      try {
-         List<Police> jsonPolieList = new ArrayList<Police>();
-         for(Police police : policeService.listPolice()) {
-            jsonPolieList.add(
-               new Police(police.getPoliceId(), police.getLocation(),
-                     police.getRegionId(), police.getLat(), police.getLog(), police.getName())
-         );
-      }
-         Gson gson = new GsonBuilder().setPrettyPrinting().create();
-         String json = gson.toJson(jsonPolieList);
-         
-         HandlerUtil.sendResponse(exchange, json);
-         
-      } catch (SQLException sqle) {
-         sqle.printStackTrace();
-      }
-      
       
    }
 
