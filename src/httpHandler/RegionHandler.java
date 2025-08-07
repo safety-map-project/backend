@@ -29,81 +29,86 @@ public class RegionHandler implements HttpHandler {
 
     @Override
     public void handle(HttpExchange exchange) throws IOException {
-        
-    	HandlerUtil.optionsEquals(exchange);
     	
-    	Gson gson = new GsonBuilder().setPrettyPrinting().create();
-        CoordService coordService = new CoordServiceImpl();
-        
-        try {
-        	
-        	String query = exchange.getRequestURI().getQuery().trim();
-        	System.out.println(query);
-        	String guName = null;
-        	int eIdx = query.indexOf("=");
-        	String siName = null;
-        	List<Coord> coordList = null;
-        	
-        	if(query.contains("시")) {
-            	int siIdx = query.indexOf("시");
-            	guName = query.substring(siIdx+1).trim();
-            	siName = query.substring(eIdx+1, siIdx-2).trim();
-            	
-//            	구 이름에 해당하는 모든 객체를 리스트에 담는다.
-            	coordList = coordService.guCoordsList(guName);
-            	
-//              좌표쌍들을 담는 리스트 
-            	List<double[]> coordPairs = new ArrayList<double[]>();
-            	
-            	List<Coord> selectedCoordList = new ArrayList<Coord>();
-            	
-            	if(isDupGu(coordList)) { // 중복 구일 경우(중구, 동구, 서구...등등)
-            		String frontTwoId = filteringRegionIdForSiName(siName);
-                	for(Coord coord : coordList) {
-                		if(Integer.toString(coord.getRegionId())
-                				.substring(0, 2).equals(frontTwoId)) {
-                			selectedCoordList.add(coord);
-                		}
-                	}
-                	
-                	for(Coord coord : selectedCoordList) {
-                		coordPairs.add(makeCoordPairArr(coord.getLat(), coord.getLog()));
-                	}
-                	
-            		getSortedList(coordPairs); // 중심 좌표와의 각도에 대해 정렬
-                	
-            		Map<String, Object> responsData = new HashMap<String, Object>();
-            		
-            		responsData.put("centerCoords", getCenterCoord(coordPairs));
-            		responsData.put("coords", coordPairs);
-            		responsData.put("zone", separationZone(selectedCoordList));
-            		
-                	String jsonResponse = gson.toJson(responsData);
-                	HandlerUtil.sendResponse(exchange, jsonResponse);
-                	
-                	
-            	} else { // 유일한 구일 경우
-            		coordList = coordService.guCoordsList(guName);
-            		for(Coord coord : coordList) {
-            			coordPairs.add(makeCoordPairArr(coord.getLat(), coord.getLog()));
-            		}
-            		getSortedList(coordPairs);
-            		
-            		Map<String, Object> responsData = new HashMap<String, Object>();
-            		
-            		responsData.put("centerCoords", getCenterCoord(coordPairs));
-            		responsData.put("coords", coordPairs);
-            		responsData.put("zone", separationZone(coordList));
-            		
-                	String jsonResponse = gson.toJson(responsData);
-                	HandlerUtil.sendResponse(exchange, jsonResponse);
-            	}
-        	}
-        	
-    
-    } catch(SQLException sqle) {
-    	sqle.printStackTrace();
-    }
+    	if (exchange.getRequestMethod().equals("GET") ) {
+    	
+	    	//HandlerUtil.optionsEquals(exchange);
+	    	
+	    	Gson gson = new GsonBuilder().setPrettyPrinting().create();
+	        CoordService coordService = new CoordServiceImpl();
+	        
+	        try {
+	        	
+	        	String query = exchange.getRequestURI().getQuery().trim();
+	        	System.out.println(query);
+	        	String guName = null;
+	        	int eIdx = query.indexOf("=");
+	        	String siName = null;
+	        	List<Coord> coordList = null;
+	        	
+	        	if(query.contains("시")) {
+	            	int siIdx = query.indexOf("시");
+	            	guName = query.substring(siIdx+1).trim();
+	            	siName = query.substring(eIdx+1, siIdx-2).trim();
+	            	
+	//            	구 이름에 해당하는 모든 객체를 리스트에 담는다.
+	            	coordList = coordService.guCoordsList(guName);
+	            	
+	//              좌표쌍들을 담는 리스트 
+	            	List<double[]> coordPairs = new ArrayList<double[]>();
+	            	
+	            	List<Coord> selectedCoordList = new ArrayList<Coord>();
+	            	
+	            	if(isDupGu(coordList)) { // 중복 구일 경우(중구, 동구, 서구...등등)
+	            		String frontTwoId = filteringRegionIdForSiName(siName);
+	                	for(Coord coord : coordList) {
+	                		if(Integer.toString(coord.getRegionId())
+	                				.substring(0, 2).equals(frontTwoId)) {
+	                			selectedCoordList.add(coord);
+	                		}
+	                	}
+	                	
+	                	for(Coord coord : selectedCoordList) {
+	                		coordPairs.add(makeCoordPairArr(coord.getLat(), coord.getLog()));
+	                	}
+	                	
+	            		getSortedList(coordPairs); // 중심 좌표와의 각도에 대해 정렬
+	                	
+	            		Map<String, Object> responsData = new HashMap<String, Object>();
+	            		
+	            		responsData.put("centerCoords", getCenterCoord(coordPairs));
+	            		responsData.put("coords", coordPairs);
+	            		responsData.put("zone", separationZone(selectedCoordList));
+	            		
+	                	String jsonResponse = gson.toJson(responsData);
+	                	HandlerUtil.sendResponse(exchange, jsonResponse);
+	                	
+	                	
+	            	} else { // 유일한 구일 경우
+	            		coordList = coordService.guCoordsList(guName);
+	            		for(Coord coord : coordList) {
+	            			coordPairs.add(makeCoordPairArr(coord.getLat(), coord.getLog()));
+	            		}
+	            		getSortedList(coordPairs);
+	            		
+	            		Map<String, Object> responsData = new HashMap<String, Object>();
+	            		
+	            		responsData.put("centerCoords", getCenterCoord(coordPairs));
+	            		responsData.put("coords", coordPairs);
+	            		responsData.put("zone", separationZone(coordList));
+	            		
+	                	String jsonResponse = gson.toJson(responsData);
+	                	HandlerUtil.sendResponse(exchange, jsonResponse);
+	            	}
+	        	}
+	        	
+	    
+	    } catch(SQLException sqle) {
+	    	sqle.printStackTrace();
+	    }
+	        
+    } // if
+    	
 } // handle
     
     public static double[] makeCoordPairArr(double lat, double log) {
@@ -147,13 +152,11 @@ public class RegionHandler implements HttpHandler {
     	try {
 			List<Crime> allCrimeList = crimeService.listCrime();
 			int regionId = coordList.get(3).getRegionId(); 
-			System.out.println("regionId: "+regionId);
 			List<Integer> crimeCounts = crimeService.getCrimeCount(regionId);
 			int regionCrimeCount = 0;
 			for(int count : crimeCounts) {
 				regionCrimeCount += count;
 			}
-			System.out.println("regionCrimeCount: "+regionCrimeCount);
 			
 //			시 별 범죄 평균
 			CrimeAvg avg = crimeService.calculateCrimeAverage(allCrimeList);
