@@ -3,6 +3,7 @@ package httpHandler;
 import java.io.IOException;
 import java.sql.SQLException;
 
+import com.google.gson.Gson;
 import com.sun.net.httpserver.HttpExchange;
 import com.sun.net.httpserver.HttpHandler;
 
@@ -19,7 +20,8 @@ public class CCTVHandler implements HttpHandler {
 			String cctvStr = "";
 			
 			try {
-				cctvStr = CCTVDao.listCctv().toString();
+				Gson gson = new Gson();
+				cctvStr = gson.toJson(CCTVDao.listCctv());
 			}catch (SQLException sqle) {
 				sqle.printStackTrace();
 			}
