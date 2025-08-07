@@ -1,4 +1,4 @@
-package httpHandler;
+package main;
 
 import java.sql.SQLException;
 import java.util.List;

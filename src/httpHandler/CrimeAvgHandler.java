@@ -20,22 +20,24 @@ public class CrimeAvgHandler implements HttpHandler {
 
 	@Override
 	public void handle(HttpExchange exchange) throws IOException {
-		HandlerUtil.optionsEquals(exchange);
 
-		CrimeDaoImpl crimeDao = new CrimeDaoImpl();
-
-		try {
-			List<Crime> crimeList = crimeDao.listCrime();
-			CrimeAvg crimeAvg = crimeDao.calculateCrimeAverage(crimeList);
-
-			Gson gson = new GsonBuilder().setPrettyPrinting().create();
-			String json = gson.toJson(crimeAvg);
-
-			HandlerUtil.sendResponse(exchange, json);
-
-		} catch (SQLException e) {
-			e.printStackTrace();
+		if(exchange.getRequestMethod().equals("GET")) {
 			
+			CrimeDaoImpl crimeDao = new CrimeDaoImpl();
+			
+			try {
+				List<Crime> crimeList = crimeDao.listCrime();
+				CrimeAvg crimeAvg = crimeDao.calculateCrimeAverage(crimeList);
+				
+				Gson gson = new GsonBuilder().setPrettyPrinting().create();
+				String json = gson.toJson(crimeAvg);
+				
+				HandlerUtil.sendResponse(exchange, json);
+				
+			} catch (SQLException e) {
+				e.printStackTrace();
+				
+			}
 		}
 	}
 }

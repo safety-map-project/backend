@@ -20,30 +20,34 @@ public class RegionSiGuHandler implements HttpHandler {
 	@Override
 	public void handle(HttpExchange exchange) throws IOException {
 		
-		HandlerUtil.optionsEquals(exchange);
-		
-		RegionService regionService = new RegionServiceImpl();
-		
-		try {
+		if(exchange.getRequestMethod().equals("GET")) {
 			
-			List<Region> regionList = new ArrayList<Region>();
-			for(Region region : regionService.listRegion()) {
+			System.out.println(exchange.getRequestURI());
+			
+			RegionService regionService = new RegionServiceImpl();
+			
+			try {
 				
-				regionList.add(
-					new Region(region.getRegionId(), region.getGu(), region.getSi())
-				);
+				List<Region> regionList = new ArrayList<Region>();
+				for(Region region : regionService.listRegion()) {
+					
+					regionList.add(
+							new Region(region.getRegionId(), region.getGu(), region.getSi())
+							);
+					
+				}
 				
+				Gson gson = new GsonBuilder().setPrettyPrinting().create();
+				String json = gson.toJson(regionList);
+				
+				HandlerUtil.sendResponse(exchange, json);
+				
+				
+			} catch (SQLException sqle) {
+				sqle.printStackTrace();
 			}
-			
-			Gson gson = new GsonBuilder().setPrettyPrinting().create();
-			String json = gson.toJson(regionList);
-			
-			HandlerUtil.sendResponse(exchange, json);
-			
-			
-		} catch (SQLException sqle) {
-			sqle.printStackTrace();
 		}
+		
 
 	}
 
