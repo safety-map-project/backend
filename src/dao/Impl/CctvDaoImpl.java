@@ -23,9 +23,8 @@ public class CctvDaoImpl implements CctvDao {
 
 	@Override
 	public List<Cctv> listCctv() throws SQLException {
-		String sql = " selelct cctvid, location, lat, log, regionid " +
-					" from MAP.CCTV " +
-					" order by desc ";
+		String sql = " select cctvId, location, regionId, lat, log " +
+					" from MAP.CCTV ";
 		
 		pstmt = conn.prepareStatement(sql);
 		rs = pstmt.executeQuery();
