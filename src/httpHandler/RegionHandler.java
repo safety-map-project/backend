@@ -47,7 +47,6 @@ public class RegionHandler implements HttpHandler {
 	            	int siIdx = query.indexOf("시");
 	            	guName = query.substring(siIdx+1).trim();
 	            	siName = query.substring(eIdx+1, eIdx+3).trim();
-	            	System.out.println(siName);
 	            	
 	//            	구 이름에 해당하는 모든 객체를 리스트에 담는다.
 	            	List<Coord> coordList = coordService.guCoordsList(guName);
@@ -58,8 +57,8 @@ public class RegionHandler implements HttpHandler {
 //	            	사용자가 선택한 시에 존재하는 구의 coord 객체만 골라 담을 리스트.
 	            	List<Coord> selectedCoordList = new ArrayList<Coord>();
 	            	
+	            	
 	            	if(isDupGu(coordList)) { // 중복 구일 경우(중구, 동구, 서구...등등)
-	            		
 	            		
 //	            		시를 구분하기 위해 지역코드 앞 두자리를 구한다.
 	            		String frontTwoId = filteringRegionIdForSiName(siName);
@@ -74,7 +73,8 @@ public class RegionHandler implements HttpHandler {
 	                		coordPairs.add(makeCoordPairArr(coord.getLat(), coord.getLog()));
 	                	}
 	                	
-	            		getSortedList(coordPairs); // 중심 좌표와의 각도에 대해 정렬
+	                	getSortedList(coordPairs);
+	            		settingFirstAndLast(coordPairs);
 	                	
 	            		Map<String, Object> responseData = new HashMap<String, Object>();
 	            		
@@ -90,10 +90,13 @@ public class RegionHandler implements HttpHandler {
 	            	} else { // 유일한 구일 경우
 	            		
 //	            		coordList = coordService.guCoordsList(guName);
+	            		
 	            		for(Coord coord : coordList) {
 	            			coordPairs.add(makeCoordPairArr(coord.getLat(), coord.getLog()));
 	            		}
+	            		
 	            		getSortedList(coordPairs);
+	            		settingFirstAndLast(coordPairs);
 	            		
 	            		Map<String, Object> responseData = new HashMap<String, Object>();
 	            		
@@ -226,17 +229,26 @@ public class RegionHandler implements HttpHandler {
     	double centerLat = centerCoord[0];
     	double centerLng = centerCoord[1];
     	
+    	
 //    	경도 기준 오름차순 정렬
     	Collections.sort(coordPairs, new Comparator<double[]>() {
 
 			@Override
-			public int compare(double[] o1, double[] o2) {
-				return Double.compare(Math.atan2(o1[0]-centerLat, o1[1]-centerLng),
-						Math.atan2(o2[0]-centerLat, o2[1]-centerLng));
+			public int compare(double[] a, double[] b) {
+				double angleA = Math.atan2(a[0]-centerLat, a[1]-centerLng);
+				double angleB = Math.atan2(b[0]-centerLat, b[1]-centerLng);
+				
+				angleA = Math.toDegrees(angleA);
+				angleB = Math.toDegrees(angleB);
+				
+				if(angleA < 0) angleA += 360;
+				if(angleB < 0) angleB += 360;
+				
+				return Double.compare(angleA, angleB);
 			}
-		});
-    	
-    	return coordPairs;
+			
+    	});
+		return coordPairs;
     	
     } // getSortedList
     
@@ -266,6 +278,20 @@ public class RegionHandler implements HttpHandler {
    	return centerCoord;
    	
    } // getCenterCoord
+   
+//   폴리곤의 시작점과 끝점을 맞추는 메소드
+   public static void settingFirstAndLast(List<double[]> coordPairs) {
+	   int size = coordPairs.size();
+	   double[] firstCoord = coordPairs.get(0);
+	   double[] lastCoord = coordPairs.get(size-1);
+	   
+	   if(firstCoord[0] != lastCoord[0]
+			   || firstCoord[1] != lastCoord[1]) {
+		   
+		   coordPairs.add(firstCoord);
+		   
+	   }
+   } // settingFirstAndLast
     
 }
     
